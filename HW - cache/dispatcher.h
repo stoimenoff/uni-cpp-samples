@@ -54,6 +54,7 @@ class Dispatcher
 		/*Internal search functions, returning index*/
 		int getUserIndex(const String &username);
 		int getMovieIndex(const String &movieId);
+		int getStaffIndex(const String &name);
 		int countIgnoringRemakes(int userIndex);
 
 		/*Movie printing functions*/

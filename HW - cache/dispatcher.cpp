@@ -108,6 +108,18 @@ int Dispatcher::getMovieIndex(const String &movieId)
 	}
 	return -1;
 }
+
+int Dispatcher::getStaffIndex(const String &name)
+{
+	for (int i = 0; i < staff.Size(); ++i)
+	{
+		if (staff[i].getName() == name)
+		{
+			return i;
+		}
+	}
+	return -1;	
+}
 /* Return the index of the nth non-remake movie in the vector
  * n = userIndex
 */
@@ -237,6 +249,12 @@ void Dispatcher::addStaff(Role role)
 	int day, month, year;
 	String name;
 	cout << "Enter names: "; cin >> name;
+	while (getStaffIndex(name) != -1)
+	{
+		cout << "There is already a staff member with that name!" << endl;
+		cout << "Please, choose another one: " << endl;
+		cin >> name;
+	}
 	cout << "Please, enter a birthdate in the format DD MM YYYY: " << endl;
 	cin >> day >> month >> year;
 	Date birthdate(day, month, year);
