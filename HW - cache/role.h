@@ -10,7 +10,6 @@ enum Role {Actor, Director, Producer};
 std::ostream& operator << (std::ostream& out, const Role role);
 
 Role numberToRole(int i);
-void printRoles();
 void writeRoleToFileStream(std::ofstream& fout, const Role role);
 Role readRoleFromFileStream(std::ifstream& fin);
 

@@ -246,7 +246,6 @@ void Dispatcher::printStaff(Role role)
 void Dispatcher::addStaff(Role role)
 {
 	cout << "Addding a " << role << endl;
-	int day, month, year;
 	String name;
 	cout << "Enter names: "; cin >> name;
 	while (getStaffIndex(name) != -1)
@@ -256,13 +255,12 @@ void Dispatcher::addStaff(Role role)
 		cin >> name;
 	}
 	cout << "Please, enter a birthdate in the format DD MM YYYY: " << endl;
-	cin >> day >> month >> year;
-	Date birthdate(day, month, year);
+	Date birthdate;
+	cin >> birthdate;
 	while (birthdate.isCorrupted())
 	{
 		cout << "The date you enterd is not valid, plesase enter another one: " << endl;
-		cin >> day >> month >> year;
-		birthdate = Date(day, month, year);
+		cin >> birthdate;
 	}
 	staff.pushBack(MovieStaff(name, birthdate, role));
 }
@@ -457,17 +455,17 @@ void Dispatcher::registerUser()
 		cout << "Sorry, that username is already used or invalid :(" << endl;
 		cout << "Please, choose another one: ";
 		cin >> username;
-		newUser = User(username, password);
+		newUser.setUsername(username);
 	}
 	cout << "Enter password: ";
 	cin >> password;
-	newUser = User(username, password);
+	newUser.setPassword(password);
 	while(newUser.hasInvalidPassword())
 	{
 		cout << "Sorry, that password is not valid :(" << endl;
 		cout << "Please, choose another one: ";
 		cin >> password;
-		newUser = User(username, password);
+		newUser.setPassword(password);
 	}
 	users.pushBack(newUser);
 }
@@ -537,6 +535,14 @@ void Dispatcher::addMovie()
 	}
 	cout << "Please enter the movie genre: "; cin >> genre;
 	int remakeOf = chooseANonRemakeMovie();
+	while (remakeOf != -1 && movies[remakeOf].getYear() > year)
+	{
+		cout << "The year you chose for the movie is " << year;
+		cout << ", but the year of the original movie is ";
+		cout << movies[remakeOf].getYear();
+		cout << ". Please choose another original movie." << endl;
+		remakeOf = chooseANonRemakeMovie();
+	}
 	String remake = "";
 	if (remakeOf != -1)
 	{
@@ -573,17 +579,21 @@ bool Dispatcher::review()
 	cout << "Enter your rating for " << movies[i].getTitle() << ": ";
 	cin >> mark;
 	loggedUser.rateMovie(movies[i].getId(), mark);
+	movies[i].rate(mark);
 	cout << "Enter your review for " << movies[i].getTitle() << ": ";
 
 	String comment;
 	cin.get();
 	cin >> comment;
 	loggedUser.reviewMovie(movies[i].getId(), comment);
+	updateLoggedUser();
 	return true;
 }
 
 void Dispatcher::searchRemakes()
 {
+	if (noUser())
+		return;
 	cout << "Search for remakes" << endl;
 	int i = chooseMovie();
 	printRemakesOf(movies[i].getId());
@@ -591,6 +601,8 @@ void Dispatcher::searchRemakes()
 
 void Dispatcher::searchReviews()
 {
+	if (noUser())
+		return;
 	cout << "Search reviews" << endl;
 	int i = chooseMovie();
 	printReviewsOf(movies[i].getId());

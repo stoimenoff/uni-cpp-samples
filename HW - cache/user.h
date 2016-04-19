@@ -14,15 +14,19 @@ class User
 		bool usernameIsValid;
 		bool passwordIsValid;
 
-		bool validatePassword(const String &password);
-		bool validateUsername(const String &username);
+		void validatePassword();
+		void validateUsername();
 	public:
 		User(const String &username = "", const String &password = "");
 
 		String getUsername() const {return username;}
 		String getPassword() const {return password;}
+		
 		bool isAdmin() const {return username == "Admin";}
 		bool logIn(const String &username, const String &password) const;
+
+		void setUsername(const String &username);
+		void setPassword(const String &password);
 
 		bool rateMovie(const String &movieId, double rating);
 		bool reviewMovie(const String &movieId, const String &comment);

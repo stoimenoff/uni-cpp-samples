@@ -71,6 +71,5 @@ std::istream& operator >> (std::istream& in, Date& date)
 {
 	int day, month, year;
 	in >> day >> month >> year;
-	Date newDate(day, month, year);
-	date = newDate;
+	date = Date(day, month, year);
 }

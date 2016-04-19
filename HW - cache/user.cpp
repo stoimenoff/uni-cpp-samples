@@ -1,30 +1,40 @@
 #include "user.h"
 
-bool User::validatePassword(const String &password)
+void User::validatePassword()
 {
-	return true;
+	if (password == "" || password.length() < 4)
+	{
+		passwordIsValid = false;
+	}
+	passwordIsValid = true;
 }
 
-bool User::validateUsername(const String &username)
+void User::validateUsername()
 {
-	return true;
+	if (username == "" || username.length() < 4)
+	{
+		usernameIsValid = false;
+	}
+	usernameIsValid = true;
 }
 
 User::User(const String &username, const String &password)
+	: username(username), password(password)
 {
-	usernameIsValid = false;
-	passwordIsValid = false;
-	if (validateUsername(username))
-	{
-		this->username = username;
-		usernameIsValid = true;
-	}
-	if (validatePassword(password))
-	{
-		this->password = password;
-		passwordIsValid = true;
-	}
-	
+	validateUsername();
+	validatePassword();
+}
+
+void User::setUsername(const String &username)
+{
+	this->username = username;
+	validateUsername();
+}
+
+void User::setPassword(const String &password)
+{
+	this->password = password;
+	validatePassword();
 }
 
 bool User::logIn(const String &username, const String &password) const
