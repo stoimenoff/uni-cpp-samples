@@ -9,16 +9,22 @@ class PersonalAssistant
 		string bossName;
 		vector<Meeting*> meetings;
 		void readMeetings();
+		bool isFree(string name, DateTime start, DateTime end) const;
+		bool areFree(vector<string> people, DateTime start, DateTime end) const;
+		void printSuggestion(DateTime start, DateTime end, string person) const;
+
 	public:
 		PersonalAssistant(string bossName);
 		void showMeetings(DateTime date) const;
-		bool createMeeting(DateTime start, int duration, 
+		string createMeeting(DateTime start, int duration, 
 			vector<string> people, string extraNotes);
-		bool createRegularMeeting(DateTime start, int duration, 
+		string createRegularMeeting(DateTime start, int duration, 
 			vector<string> people, string extraNotes, string type, string note);
-		bool removeMeeting(DateTime date);
+		string removeMeeting(DateTime date);
+		string suggestMeetingTime(DateTime start, int duration, string person) const;
 		string processCommand(string command);
 		void writeChanges() const;
+		~PersonalAssistant();
 
 };
 

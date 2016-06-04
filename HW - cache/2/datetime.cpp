@@ -55,6 +55,14 @@ bool DateTime::validateIntervalString(string interval)
 	return true;
 }
 
+bool DateTime::isWeekDay(string day)
+{
+	for(string weekday : WEEKDAYS)
+		if(weekday == day)
+			return true;
+	return false;
+}
+
 tm DateTime::getTm() const
 {
 	tm timeinfo = {};
@@ -124,4 +132,72 @@ void DateTime::setTime(string time)
 		hour = stoi(time.substr(0, 2));
 		minutes = stoi(time.substr(3, 2));
 	}
+}
+
+void DateTime::setTime(int hour, int minutes)
+{
+	this->hour = hour;
+	this->minutes = minutes;
+}
+
+bool DateTime::operator == (const DateTime &other) const
+{
+	return (year == other.year
+			&& month == other.month
+			&& day == other.day
+			&& hour == other.hour
+			&& minutes == other.minutes);
+}
+bool DateTime::operator != (const DateTime &other) const
+{
+	return !(*this == other);
+}
+bool DateTime::operator > (const DateTime &other) const
+{
+	if (year < other.year)
+		return false;
+	if (year > other.year)
+		return true;
+	//equal year
+	if (month < other.month)
+		return false;
+	if (month > other.month)
+		return true;
+	//equal year and month
+	if (day < other.day)
+		return false;
+	if (day > other.day)
+		return true;
+	//equal year, month and day
+	if (hour < other.hour)
+		return false;
+	if (hour > other.hour)
+		return true;
+	return minutes > other.minutes;
+}
+bool DateTime::operator < (const DateTime &other) const
+{
+	return ((*this != other) && !(*this > other));
+}
+bool DateTime::operator >= (const DateTime &other) const
+{
+	return !(*this < other);
+}
+bool DateTime::operator <= (const DateTime &other) const
+{
+	return !(*this > other);
+}
+
+int DateTime::compareHours(const DateTime &other) const
+{
+	if(hour > other.hour)
+		return -1;
+	if(hour < other.hour)
+		return 1;
+	//equal hour
+	if(minutes > other.minutes)
+		return -1;
+	if(minutes < other.minutes)
+		return 1;
+	return 0;
 }

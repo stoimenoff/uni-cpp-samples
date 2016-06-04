@@ -40,6 +40,28 @@ void PersonalAssistant::writeChanges() const
 PersonalAssistant::PersonalAssistant(string bossName)
 	: bossName(bossName) {readMeetings();}
 
+PersonalAssistant::~PersonalAssistant()
+{
+	for(Meeting* meeting : meetings)
+		delete meeting;	
+}
+
+bool PersonalAssistant::isFree(string name, DateTime start, DateTime end) const
+{
+	for(Meeting* meeting : meetings)
+		if(meeting->contains(name) && meeting->intersectsWith(start, end))
+			return false;
+	return true;
+}
+
+bool PersonalAssistant::areFree(vector<string> people, DateTime start, DateTime end) const
+{
+	for(string person : people)
+		if(!isFree(person, start, end))
+			return false;
+	return true;
+}
+
 void PersonalAssistant::showMeetings(DateTime date) const
 {
 	for(Meeting* meeting : meetings)
@@ -47,7 +69,7 @@ void PersonalAssistant::showMeetings(DateTime date) const
 			meeting->print();
 }
 
-bool PersonalAssistant::removeMeeting(DateTime date)
+string PersonalAssistant::removeMeeting(DateTime date)
 {
 	for(int i = 0; i < meetings.size(); i++)
 	{
@@ -59,34 +81,68 @@ bool PersonalAssistant::removeMeeting(DateTime date)
 			{
 				delete meetings[i];
 				meetings.erase(meetings.begin() + i);
+				return "Meeting removed successfully";
 			}
-			return true;
+			return "You were successfully removed from the meeting";
 		}
 	}
-	return false;
+	return "No such meeting";
 }
 
-bool PersonalAssistant::createMeeting(DateTime start, int duration, 
+string PersonalAssistant::createMeeting(DateTime start, int duration, 
 			vector<string> people, string extraNotes)
 {
-	//TODO time checks
-	DateTime end = (start + duration);
+	if(duration % 30 != 0)
+		return "Bad meeting duration, It should be a multiple of 30 minutes";
+
+	DateTime end = start + duration;
+
+	if(start.timeIsInvalid() || end.timeIsInvalid())
+		return "Bad meeting start or end";
+
+	if(!isFree(bossName, start, end))
+		return "You are not free in that period of time";
+
+	if(!areFree(people, start, end))
+		return "One or more of the people are busy";
+
 	Meeting* newMeeting = new Meeting(start, end, extraNotes);
-	for (int i = 0; i < people.size(); ++i)
-	{
-		newMeeting->addPerson(people[i]);
-	}
+	for(string person : people)
+		newMeeting->addPerson(person);
+
 	newMeeting->addPerson(bossName);
 	meetings.push_back(newMeeting);
-	return true;
+	return "Meeting created successfully";
 }
 
-bool PersonalAssistant::createRegularMeeting(DateTime start, int duration, 
+string PersonalAssistant::createRegularMeeting(DateTime start, int duration, 
 			vector<string> people, string extraNotes, string type, string note)
 {
-	//TODO time checks
-	//TODO type and note checks
-	DateTime end = (start + duration);
+	if(duration % 30 != 0)
+		return "Bad meeting duration, It should be a multiple of 30 minutes";
+
+	DateTime end = start + duration;
+
+	if(start.timeIsInvalid() || end.timeIsInvalid())
+		return "Bad meeting start or end";
+
+	if(type != "daily" && type != "weekly" && type != "monthly" )
+		return "Invalid meeting type";
+
+	if(type == "weekly")
+		if(!DateTime::isWeekDay(note))
+			return "Invalid week day";
+
+	if(type == "monthly")
+		if(stoi(note) < 0 || stoi(note) > 28)
+			return "Invalid month day";
+
+	if(!isFree(bossName, start, end))
+		return "You are not free in that period of time";
+
+	if(!areFree(people, start, end))
+		return "One or more of the people are busy";
+
 	Meeting* newMeeting = new RegularMeeting(start, end, extraNotes, type, note);
 	for (int i = 0; i < people.size(); ++i)
 	{
@@ -94,7 +150,40 @@ bool PersonalAssistant::createRegularMeeting(DateTime start, int duration,
 	}
 	newMeeting->addPerson(bossName);
 	meetings.push_back(newMeeting);
-	return true;
+	return "Regular meeting created successfully";
+}
+
+void PersonalAssistant::printSuggestion(DateTime start, DateTime end, string person) const
+{
+	if(end.isTimeValid())
+	{
+		if(isFree(bossName, start, end) && isFree(person, start, end))
+		{
+			cout << start.getHour() << ":" << start.getMinutes() << "-";
+			cout << end.getHour() << ":" << end.getMinutes() << ", ";
+		}
+	}
+}
+
+string PersonalAssistant::suggestMeetingTime(DateTime start, int duration, string person) const
+{
+	if(duration % 30 != 0)
+		return "Bad meeting duration, It should be a multiple of 30 minutes";
+
+	DateTime end;
+	for (int hour = 8; hour < 20; ++hour)
+	{
+		start.setTime(hour, 0);
+		end = start + duration;
+		printSuggestion(start, end, person);
+
+		start.setTime(hour, 30);
+		end = start + duration;
+		printSuggestion(start, end, person);
+	}
+
+	return "End of suggestions";
+
 }
 
 string PersonalAssistant::processCommand(string command)
@@ -117,8 +206,7 @@ string PersonalAssistant::processCommand(string command)
 		int duration = stoi(params[3]);
 		vector<string> people(params.begin() + 4, params.end() - 1);
 		string extraNotes = params.back();
-		createMeeting(date, duration, people, extraNotes);
-		return "";
+		return createMeeting(date, duration, people, extraNotes);
 	}
 	if(cmd == "crm")
 	{
@@ -133,8 +221,7 @@ string PersonalAssistant::processCommand(string command)
 		string note = params[4];
 		vector<string> people(params.begin() + 5, params.end() - 1);
 		string extraNotes = params.back();
-		createRegularMeeting(date, duration, people, extraNotes, type, note);
-		return "";
+		return createRegularMeeting(date, duration, people, extraNotes, type, note);
 	}
 	if(cmd == "rm")
 	{
@@ -144,8 +231,7 @@ string PersonalAssistant::processCommand(string command)
 			return "Invalid time format";
 		DateTime date(params[1]);
 		date.setTime(params[2]);
-		removeMeeting(date);
-		return "";
+		return removeMeeting(date);
 	}
 	if(cmd == "sm")
 	{
@@ -153,16 +239,21 @@ string PersonalAssistant::processCommand(string command)
 			return "Invalid date format";
 		DateTime date(params[1]);
 		showMeetings(date);
-		return "";
+		return "End of meetings";
 	}
 	if(cmd == "smt")
 	{
-		//TODO
+		if(!DateTime::validateDateString(params[1]))
+			return "Invalid date format";
+		if(!DateTime::validateIntervalString(params[2]))
+			return "Invalid duration";
+		DateTime date(params[1]);
+		int duration = stoi(params[2]);
+		string person = params[3];
+		return suggestMeetingTime(date, duration, person);
 	}
 	return "Unrecognised command";
 }
-
-
 
 //string shits
 

@@ -19,6 +19,7 @@ class DateTime
 		static bool validateDateString(string date);
 		static bool validateTimeString(string time);
 		static bool validateIntervalString(string interval);
+		static bool isWeekDay(string day);
 
 		DateTime(int year = 2000, int month = 1, int day = 1, int hour = 8,
 				int minutes = 0);
@@ -29,12 +30,23 @@ class DateTime
 		int getHour() const {return hour;}
 		int getMinutes() const {return minutes;}
 		void setTime(string time);
+		void setTime(int hour, int minutes);
 
 		DateTime operator+ (int minutes) const;
+
+		bool operator == (const DateTime &other) const;
+		bool operator != (const DateTime &other) const;
+		bool operator > (const DateTime &other) const;
+		bool operator < (const DateTime &other) const;
+		bool operator >= (const DateTime &other) const;
+		bool operator <= (const DateTime &other) const;
 
 		string getWeekday() const;
 		bool isValid() const;
 		bool isTimeValid() const;
+
+		bool timeIsInvalid() const {return !isTimeValid();}
+		int compareHours(const DateTime &other) const;
 };
 
 #endif

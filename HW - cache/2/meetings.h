@@ -34,9 +34,15 @@ class Meeting
 
 		bool startsAt(DateTime date) const;
 
+		DateTime startTime() const {return start;}
+		DateTime endTime() const {return end;}
+
 		virtual void print() const;
 		virtual void insertIn(ofstream &out) const;
 		virtual bool isOn(DateTime date) const;
+		virtual string getType() const {return "meeting";}
+
+		virtual bool intersectsWith(DateTime start, DateTime end) const;
 };
 
 class RegularMeeting : public Meeting
@@ -48,12 +54,15 @@ class RegularMeeting : public Meeting
 		RegularMeeting();
 		RegularMeeting(DateTime start, DateTime end, string extraNotes, 
 			string type, string note);
-		string getType() const {return type;}
+		
+		virtual string getType() const {return type;}
 		string getNote() const {return note;}
 
 		virtual void print() const;
 		virtual void insertIn(ofstream &out) const;
 		virtual bool isOn(DateTime date) const;
+
+		virtual bool intersectsWith(DateTime mStart, DateTime mEnd) const;
 };
 
 Meeting* extractMeetingFrom(ifstream &in);

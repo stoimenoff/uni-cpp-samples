@@ -95,6 +95,11 @@ bool Meeting::startsAt(DateTime date) const
 			&& start.getMinutes() == date.getMinutes());
 }
 
+bool Meeting::intersectsWith(DateTime start, DateTime end) const
+{
+	return (this->start < end && this->end > start);
+}
+
 //Regular Meeting
 
 RegularMeeting::RegularMeeting()
@@ -164,4 +169,20 @@ bool RegularMeeting::isOn(DateTime date) const
 		return note == date.getWeekday();
 	if(type == "monthly")
 		return stoi(note) == date.getDay();
+}
+
+bool RegularMeeting::intersectsWith(DateTime mStart, DateTime mEnd) const
+{
+	if(type == "daily")
+		return (start.compareHours(mEnd) == 1 && end.compareHours(mStart) == -1);
+
+	if(type=="weekly")
+		if(note == mStart.getWeekday())
+			return (start.compareHours(mEnd) == 1 && end.compareHours(mStart) == -1);
+
+	if(type == "monthly")
+		if(stoi(note) == mStart.getDay())
+			return (start.compareHours(mEnd) == 1 && end.compareHours(mStart) == -1);
+
+	return false;
 }
