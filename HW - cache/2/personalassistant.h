@@ -12,9 +12,18 @@ class PersonalAssistant
 		bool isFree(string name, DateTime start, DateTime end) const;
 		bool areFree(vector<string> people, DateTime start, DateTime end) const;
 		void printSuggestion(DateTime start, DateTime end, string person) const;
+		
+		PersonalAssistant(string bossName);
+
+		//Singleton
+		PersonalAssistant(const PersonalAssistant &) {};
+		PersonalAssistant& operator= (const PersonalAssistant &) {};
+
+		static PersonalAssistant* mInstance;
 
 	public:
-		PersonalAssistant(string bossName);
+		static PersonalAssistant* instance(string bossName = "");
+
 		void showMeetings(DateTime date) const;
 		string createMeeting(DateTime start, int duration, 
 			vector<string> people, string extraNotes);

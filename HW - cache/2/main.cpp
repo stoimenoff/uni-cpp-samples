@@ -8,7 +8,8 @@ int main()
 	cout << "Enter your name:" << endl;
 	getline(cin, name);
 	cout << "Hello, " << name << "!" << endl;
-	PersonalAssistant kiro(name);
+	//PersonalAssistant kiro(name);
+	PersonalAssistant* assistant = PersonalAssistant::instance(name);
 	string command;
 
 	cout << ">>";
@@ -16,10 +17,12 @@ int main()
 
 	while(command != "exit")
 	{
-		cout << kiro.processCommand(command) << endl;
+		//cout << kiro.processCommand(command) << endl;
+		cout << assistant->processCommand(command) << endl;
 		cout << ">>";
 		getline(cin, command);
 	}
-	kiro.writeChanges();
+	//kiro.writeChanges();
+	assistant->writeChanges();
 	return 0;
 }

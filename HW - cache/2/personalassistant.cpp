@@ -1,5 +1,4 @@
 #include "personalassistant.h"
-
 using std::endl;
 
 string& removeTrailing(string &str);
@@ -9,6 +8,16 @@ vector<string> cutPeople(string &command);
 vector<string> getParams(string command);
 
 const string meetingsFile = "meetings";
+
+//Singleton
+PersonalAssistant* PersonalAssistant::mInstance = NULL;
+
+PersonalAssistant* PersonalAssistant::instance(string bossName)
+{
+	if(!mInstance)
+		mInstance = new PersonalAssistant(bossName);
+	return mInstance;
+}
 
 void PersonalAssistant::readMeetings()
 {
