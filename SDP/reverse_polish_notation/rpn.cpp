@@ -53,7 +53,7 @@ queue<Token> getReversedPolishNotationOf(string input, const OperatorRegistry& o
 	while(tokenizer.present()) 
 	{
 		token = tokenizer.get();
-		std::cout << "|" << token.value << "|" << std::endl;
+		// std::cout << "|" << token.value << "|" << std::endl;
 		if(token.isNumber)
 		{
 			if(expectNegativeNumber)
