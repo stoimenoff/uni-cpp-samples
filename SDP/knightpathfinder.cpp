@@ -21,7 +21,7 @@ typedef pair<char, int> position;
 typedef array<array<position, BOARD_SIZE>, BOARD_SIZE> ChessBoard;
 typedef array<array<char, BOARD_SIZE>, BOARD_SIZE> WayBoard;
 
-const position CONTROL('Z', 9);
+const position CONTROL(' ', 0);
 
 ostream& operator<<(ostream& out, const position& pos)
 {
