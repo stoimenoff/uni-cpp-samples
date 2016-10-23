@@ -40,11 +40,29 @@ void registerOperatorsIn(OperatorRegistry& operatorsRegistry)
 	operatorsRegistry.registerOperator(power);
 }
 
+bool shouldPopOperatorsStack(const stack<Token>& operators, const Token& operatorToken, const OperatorRegistry& operatorsRegistry)
+{
+	if (operators.empty())
+		return false;
+
+	if (operators.top().value == "(")
+		return false;
+
+	Operator topOperator = operatorsRegistry.getOperatorFor(operators.top().value);
+	Operator candidateOperator = operatorsRegistry.getOperatorFor(operatorToken.value);
+
+	if(topOperator.getPriority() > candidateOperator.getPriority())
+		return true;
+
+	if(topOperator.getPriority() == candidateOperator.getPriority() && topOperator != candidateOperator)
+		return true;
+	
+	return false;
+}
+
 queue<Token> getReversedPolishNotationOf(string input, const OperatorRegistry& operatorsRegistry)
 {
 	Tokenizer tokenizer(input);
-	bool expectOperator = false;
-	bool expectNegativeNumber = false;
 
 	queue<Token> reversedPolishNotation;
 	stack<Token> operators;
@@ -56,73 +74,40 @@ queue<Token> getReversedPolishNotationOf(string input, const OperatorRegistry& o
 		// std::cout << "|" << token.value << "|" << std::endl;
 		if(token.isNumber)
 		{
-			if(expectNegativeNumber)
+			tokenizer.forbidNegativeNumbers();
+			reversedPolishNotation.push(token);
+		}
+		else if(operatorsRegistry.hasOperatorFor(token.value))
+		{
+			if(token.value == "-")
 			{
-				token.value.insert(0, "-");
-				reversedPolishNotation.push(token);
-				expectNegativeNumber = false;
+				tokenizer.allowNegativeNumbers();
 			}
-			else
+			while(shouldPopOperatorsStack(operators, token, operatorsRegistry))
 			{
-				reversedPolishNotation.push(token);
+				reversedPolishNotation.push(operators.top());
+				operators.pop();
 			}
-			expectOperator = true;
+			operators.push(token);
+		}
+		else if(token.value == "(")
+		{
+			operators.push(token);
+		}
+		else if(token.value == ")")
+		{
+			while(!operators.empty() && operators.top().value != "(")
+			{
+				reversedPolishNotation.push(operators.top());
+				operators.pop();
+			}
+			operators.pop(); //remove (
 		}
 		else
 		{
-			if(operatorsRegistry.hasOperatorFor(token.value))
-			{
-				if(!expectOperator && token.value == "-")
-				{
-					expectNegativeNumber = true;
-					continue;
-				}
-				Operator operatr = operatorsRegistry.getOperatorFor(token.value);
-				double priority = operatr.getPriority();
-				while(!operators.empty() && operators.top().value != "(")
-				{
-					Operator topOperator = operatorsRegistry.getOperatorFor(operators.top().value);
-					if(topOperator.getPriority() > priority)
-					{
-						reversedPolishNotation.push(operators.top());
-						operators.pop();
-					}
-					else if(topOperator.getPriority() == priority && topOperator != operatr)
-					{
-						reversedPolishNotation.push(operators.top());
-						operators.pop();
-					}
-					else
-					{
-						break;
-					}
-				}
-				operators.push(token);
-				expectOperator = false;
-			}
-			else // no operator
-			{
-				if(token.value == "(")
-				{
-					operators.push(token);
-				}
-				else if(token.value == ")")
-				{
-					while(!operators.empty() && operators.top().value != "(")
-					{
-						reversedPolishNotation.push(operators.top());
-						operators.pop();
-					}
-					operators.pop(); //remove (
-				}
-				else
-				{
-					throw logic_error("Unrecognized symbol");
-				}
-			}
+			throw logic_error("Unrecognized symbol " + token.value);
 		}
 	}
-
 	while(!operators.empty())
 	{
 		reversedPolishNotation.push(operators.top());

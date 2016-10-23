@@ -1,0 +1,1 @@
+g++ -std=c++11 rpn.cpp operator.cpp operatorregistry.cpp tokenizer.cpp
