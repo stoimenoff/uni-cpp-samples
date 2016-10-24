@@ -4,6 +4,7 @@
 #include <stack>
 #include <queue>
 #include <cmath>
+#include <iostream>
 
 #include "operatorregistry.h"
 #include "tokenizer.h"

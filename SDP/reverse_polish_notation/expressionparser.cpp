@@ -33,10 +33,11 @@ queue<string> ExpressionParser::getQueueReversedPolishNotationOf(const string& e
 	stack<string> operators;
 
 	Token token;
+	// std::cerr << "-------------------" << std::endl;
 	while(tokenizer.present()) 
 	{
 		token = tokenizer.get();
-		// std::cout << "|" << token.value << "|" << std::endl;
+		// std::cerr << "|" << token.value << "|" << std::endl;
 		if(token.isNumber)
 		{
 			tokenizer.forbidNegativeNumbers();
@@ -44,10 +45,7 @@ queue<string> ExpressionParser::getQueueReversedPolishNotationOf(const string& e
 		}
 		else if(operatorsRegistry.hasOperatorFor(token.value))
 		{
-			if(token.value == "-")
-			{
-				tokenizer.allowNegativeNumbers();
-			}
+			tokenizer.allowNegativeNumbers();
 			while(shouldPopOperatorsStack(operators, token.value))
 			{
 				reversedPolishNotation.push(operators.top());
