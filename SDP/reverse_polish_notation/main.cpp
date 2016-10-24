@@ -45,17 +45,6 @@ void dottyPrint(Node* node)
 	std::cout << "}" << std::endl;
 }
 
-stack<string> queueToStack(queue<string> tokensQueue)
-{
-	stack<string> tokens;
-	while(!tokensQueue.empty())
-	{
-		tokens.push(tokensQueue.front());
-		tokensQueue.pop();
-	}
-	return tokens;
-}
-
 int main()
 {
 	string input;
@@ -63,7 +52,7 @@ int main()
 
 	ExpressionParser parser;
 
-	stack<string> tokens = queueToStack(parser.getReversedPolishNotationOf(input));
+	stack<string> tokens = parser.getStackReversedPolishNotationOf(input);
 
 	dottyPrint(nodeFromStack(tokens, parser.getOperatorsRegistry()));
 

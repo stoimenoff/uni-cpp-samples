@@ -20,7 +20,8 @@ class ExpressionParser
 	public:
 		ExpressionParser();
 		ExpressionParser(const OperatorRegistry& operatorsRegistry);
-		queue<string> getReversedPolishNotationOf(const string& expression) const;
+		queue<string> getQueueReversedPolishNotationOf(const string& expression) const;
+		stack<string> getStackReversedPolishNotationOf(const string& expression) const;
 		double evaluate(const string& expression) const;
 		OperatorRegistry getOperatorsRegistry() const;
 };

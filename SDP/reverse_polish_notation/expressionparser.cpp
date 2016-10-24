@@ -25,7 +25,7 @@ bool ExpressionParser::shouldPopOperatorsStack(const stack<string>& operators, c
 	return false;
 }
 
-queue<string> ExpressionParser::getReversedPolishNotationOf(const string& expression) const
+queue<string> ExpressionParser::getQueueReversedPolishNotationOf(const string& expression) const
 {
 	Tokenizer tokenizer(expression);
 
@@ -81,9 +81,21 @@ queue<string> ExpressionParser::getReversedPolishNotationOf(const string& expres
 	return reversedPolishNotation;
 }
 
+stack<string> ExpressionParser::getStackReversedPolishNotationOf(const string& expression) const
+{
+	queue<string> tokensQueue = getQueueReversedPolishNotationOf(expression);
+	stack<string> tokens;
+	while(!tokensQueue.empty())
+	{
+		tokens.push(tokensQueue.front());
+		tokensQueue.pop();
+	}
+	return tokens;
+}
+
 double ExpressionParser::evaluate(const string& expression) const
 {
-	queue<string> reversedPolishNotation = getReversedPolishNotationOf(expression);
+	queue<string> reversedPolishNotation = getQueueReversedPolishNotationOf(expression);
 	string token;
 	stack<double> numbers;
 	while(!reversedPolishNotation.empty())
