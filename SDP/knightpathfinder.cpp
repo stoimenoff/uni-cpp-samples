@@ -17,25 +17,26 @@ using std::endl;
 
 const int BOARD_SIZE = 8;
 
-typedef pair<char, int> position;
-typedef array<array<position, BOARD_SIZE>, BOARD_SIZE> ChessBoard;
+typedef pair<char, int> Position;
+typedef pair<int, int> Displacement;
+typedef array<array<Position, BOARD_SIZE>, BOARD_SIZE> ChessBoard;
 typedef array<array<char, BOARD_SIZE>, BOARD_SIZE> WayBoard;
 
-const position CONTROL(' ', 0);
+const Position CONTROL(' ', 0);
 
-ostream& operator<<(ostream& out, const position& pos)
+ostream& operator<<(ostream& out, const Position& position)
 {
-	out << pos.first << pos.second;
+	out << position.first << position.second;
 	return out;
 }
 
 ostream& operator<<(ostream& out, const ChessBoard& board)
 {
-	for (array<position, BOARD_SIZE> row : board)
+	for (array<Position, BOARD_SIZE> row : board)
 	{
-		for (position &pos : row)
+		for (Position &position : row)
 		{
-			out << pos << " ";
+			out << position << " ";
 		}
 		out << endl;
 	}
@@ -55,14 +56,14 @@ ostream& operator<<(ostream& out, const WayBoard& board)
 	return out;
 }
 
-bool operator==(const position& pos1, const position& pos2)
+bool operator==(const Position& position1, const Position& position2)
 {
-	return pos1.first == pos2.first && pos1.second == pos2.second;
+	return position1.first == position2.first && position1.second == position2.second;
 }
 
-position operator+(const position& pos, const pair<int, int>& margin)
+Position operator+(const Position& position, const Displacement& displacement)
 {
-	return position(pos.first + margin.first, pos.second + margin.second);
+	return Position(position.first + displacement.first, position.second + displacement.second);
 }
 
 void init(WayBoard& wayBoard)
@@ -76,10 +77,10 @@ void init(WayBoard& wayBoard)
 	}
 }
 
-bool isValidPosition(position pos)
+bool isValidPosition(Position position)
 {
-	char letter = pos.first;
-	int number = pos.second;
+	char letter = position.first;
+	int number = position.second;
 	if(letter < 'A' || letter > 'A' + BOARD_SIZE - 1)
 		return false;
 	if(number < 1 || number > BOARD_SIZE)
@@ -87,21 +88,22 @@ bool isValidPosition(position pos)
 	return true;
 }
 
-const vector<pair<int, int>> margins = {pair<int, int>(-2, -1),
-										pair<int, int>(-2, 1),
-										pair<int, int>(-1, -2),
-										pair<int, int>(-1, 2),
-										pair<int, int>(1, -2),
-										pair<int, int>(1, 2),
-										pair<int, int>(2, -1),
-										pair<int, int>(2, 1)};
+const vector<Displacement> displacements = {
+										Displacement(-2, -1),
+										Displacement(-2, 1),
+										Displacement(-1, -2),
+										Displacement(-1, 2),
+										Displacement(1, -2),
+										Displacement(1, 2),
+										Displacement(2, -1),
+										Displacement(2, 1)};
 
-vector<position> possibleMoves(position currentPosition)
+vector<Position> positionsibleMoves(Position currentPosition)
 {
-	vector<position> moves;
-	for (pair<int, int> margin : margins)
+	vector<Position> moves;
+	for (Displacement displacement : displacements)
 	{
-		position newPosition = currentPosition + margin;
+		Position newPosition = currentPosition + displacement;
 		if(isValidPosition(newPosition))
 		{
 			moves.push_back(newPosition);
@@ -111,35 +113,35 @@ vector<position> possibleMoves(position currentPosition)
 }
 
 //vector set difference
-vector<position> operator/(vector<position> v1, vector<position> v2)
+vector<Position> operator/(vector<Position> v1, vector<Position> v2)
 {
-	vector<position> difference;
-	for(position& pos : v1)
+	vector<Position> difference;
+	for(Position& position : v1)
 	{
-		if(find(v2.begin(), v2.end(), pos) == v2.end())
-			difference.push_back(pos);
+		if(find(v2.begin(), v2.end(), position) == v2.end())
+			difference.push_back(position);
 	}
 	return difference;
 }
 
-position inputPosition()
+Position inputPosition()
 {
 	char initialLetter;
 	int initialNumber;
 	cin >> initialLetter >> initialNumber;
-	return position(initialLetter, initialNumber);
+	return Position(initialLetter, initialNumber);
 }
 
-int calculateDistance(position initialPosition, position desiredPosition)
+int calculateDistance(Position initialPosition, Position desiredPosition)
 {
-	vector<position> checked;
-	queue<position> movesQueue;
+	vector<Position> checked;
+	queue<Position> movesQueue;
 	movesQueue.push(initialPosition);
 	checked.push_back(initialPosition);
 	movesQueue.push(CONTROL);
 
 	int distance = 0;
-	position currentPosition;
+	Position currentPosition;
 	while(movesQueue.size() > 0)
 	{
 		currentPosition = movesQueue.front();
@@ -159,20 +161,20 @@ int calculateDistance(position initialPosition, position desiredPosition)
 			return distance;
 		}
 
-		for(position pos : (possibleMoves(currentPosition) / checked))
+		for(Position position : (positionsibleMoves(currentPosition) / checked))
 		{
-			movesQueue.push(pos);
-			checked.push_back(pos);
+			movesQueue.push(position);
+			checked.push_back(position);
 		}
 	}
 	return -1;
 }
 
-WayBoard markWay(const ChessBoard& board, position initialPosition, position desiredPosition, int distance)
+WayBoard markWay(const ChessBoard& board, Position initialPosition, Position desiredPosition, int distance)
 {
 	WayBoard wayBoard;
 	init(wayBoard);
-	position currentPosition = desiredPosition;
+	Position currentPosition = desiredPosition;
 	for (int i = 0; i <= distance; ++i)
 	{
 		wayBoard[BOARD_SIZE - currentPosition.second][currentPosition.first - 'A'] = distance - i + 48;
@@ -181,10 +183,10 @@ WayBoard markWay(const ChessBoard& board, position initialPosition, position des
 	return wayBoard;
 }
 
-WayBoard findWay(position initialPosition, position desiredPosition)
+WayBoard findWay(Position initialPosition, Position desiredPosition)
 {
-	vector<position> checked;
-	queue<position> movesQueue;
+	vector<Position> checked;
+	queue<Position> movesQueue;
 	movesQueue.push(initialPosition);
 	checked.push_back(initialPosition);
 	movesQueue.push(CONTROL);
@@ -192,7 +194,7 @@ WayBoard findWay(position initialPosition, position desiredPosition)
 	int distance = 0;
 	ChessBoard board;
 
-	position currentPosition;
+	Position currentPosition;
 	while(movesQueue.size() > 0)
 	{
 		currentPosition = movesQueue.front();
@@ -212,23 +214,23 @@ WayBoard findWay(position initialPosition, position desiredPosition)
 			return markWay(board, initialPosition, desiredPosition, distance);
 		}
 
-		for(position pos : (possibleMoves(currentPosition) / checked))
+		for(Position position : (positionsibleMoves(currentPosition) / checked))
 		{
-			movesQueue.push(pos);
-			board[BOARD_SIZE - pos.second][pos.first - 'A'] = currentPosition;
-			checked.push_back(pos);
+			movesQueue.push(position);
+			board[BOARD_SIZE - position.second][position.first - 'A'] = currentPosition;
+			checked.push_back(position);
 		}
 	}
 	return WayBoard();
 }
 
-void printAllDistancesFrom(position initialPosition)
+void printAllDistancesFrom(Position initialPosition)
 {
 	for (int j = BOARD_SIZE; j >= 1; --j)
 	{
 		for (int i = 0; i < BOARD_SIZE; ++i)
 	 	{
-	 		position desiredPosition(char(i + 65), j);
+	 		Position desiredPosition(char(i + 65), j);
 	 		int distance = calculateDistance(initialPosition, desiredPosition);
 
 	 		if(distance == -1)
@@ -243,8 +245,8 @@ void printAllDistancesFrom(position initialPosition)
 
 int main()
 {
-	position initialPosition = inputPosition();
-	position desiredPosition = inputPosition();
+	Position initialPosition = inputPosition();
+	Position desiredPosition = inputPosition();
 
 	printAllDistancesFrom(initialPosition);
 
