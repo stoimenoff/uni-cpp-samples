@@ -59,5 +59,11 @@ int main()
 		cout << "-----------------" << endl;
 	}
 
+	for (int i = 0; i < 5; ++i)
+	{
+		intTree[i] += 1;
+	}
+	intTree.prettyPrint();
+
 	return 0;
 }
