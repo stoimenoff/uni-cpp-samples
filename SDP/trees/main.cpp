@@ -24,9 +24,9 @@ int main()
 						return int(symbol);
 					})
 			.reduce<int>([] (const int& result, const int& number)
-						{
-							return result + number;
-						}, 0)
+					{
+						return result + number;
+					}, 0)
 	<< endl;
 
 
@@ -35,6 +35,29 @@ int main()
 	intTree.map<bool>([] (const int& number) {return number > 13;})
 		   .reduce<int>([] (const int& result, const bool& number) {return result + number;}, 0)
 	<< endl;
+
+	for(auto& element : intTree.listLeaves())
+	{
+		cout << element << endl;
+	}
+
+	cout << intTree.findTrace(17) << endl;
+	cout << intTree.findTrace(16) << endl;
+	cout << intTree.findTrace(18) << endl;
+
+	intTree.prettyPrint();
+	intTree.simplePrint();
+	intTree.dottyPrint(cout);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		cout << "Level " << i << "----------" << endl;
+		for(auto& element : intTree.level(i))
+		{
+			cout << element << endl;
+		}
+		cout << "-----------------" << endl;
+	}
 
 	return 0;
 }
