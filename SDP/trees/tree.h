@@ -42,7 +42,12 @@ public:
 	BinaryTree();
 	BinaryTree(const BinaryTree<T>& other);
 	BinaryTree<T>& operator=(const BinaryTree<T>& other);
+
+	BinaryTree(BinaryTree<T>&& other);
+	BinaryTree<T>& operator=(BinaryTree<T>&& other);
+
 	~BinaryTree();
+
 	BinaryTree<T>& add (const T& data, const char *trace);
 	void simplePrint () const;
 	void dottyPrint (ostream&) const;
@@ -141,6 +146,21 @@ BinaryTree<T>& BinaryTree<T>::operator=(const BinaryTree<T>& other)
 		deleteAll(root);
 		copyTree(root, other.root);
 	}
+	return *this;
+}
+
+template <class T>
+BinaryTree<T>::BinaryTree(BinaryTree<T>&& other)
+{
+	root = other.root;
+	other.root = NULL;
+}
+
+template <class T>
+BinaryTree<T>& BinaryTree<T>::operator=(BinaryTree<T>&& other)
+{
+	root = other.root;
+	other.root = NULL;
 	return *this;
 }
 
