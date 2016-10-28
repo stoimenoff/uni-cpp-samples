@@ -28,7 +28,7 @@ private:
 	bool member (const T&, Node<T> *subTreeRoot) const;
 	void deleteAll (Node<T> *subTreeRoot);
 	void copyTree(Node<T>* &targetRoot, const Node<T>* sourceRoot);
-	
+
 	template <class R>
 	Node<R>* map(mapper<T, R> mapping, Node<T> *subTreeRoot) const;
 
@@ -52,7 +52,7 @@ public:
 	void simplePrint () const;
 	void dottyPrint (ostream&) const;
 	bool member (const T&) const;
-	
+
 	template <class R>
 	BinaryTree<R> map(mapper<T, R> mapping) const;
 
@@ -133,7 +133,7 @@ void BinaryTree<T>::copyTree(Node<T>* &targetRoot, const Node<T>* sourceRoot)
 		targetRoot = NULL;
 		return;
 	}
-	targetRoot->data = sourceRoot->data;
+	targetRoot = new Node<T>(sourceRoot->data, NULL, NULL);
 	copyTree(targetRoot->left, sourceRoot->left);
 	copyTree(targetRoot->right, sourceRoot->right);
 }
@@ -201,10 +201,10 @@ void BinaryTree<T>::dottyPrint(ostream& out, Node<T> *subTreeRoot, int id) const
 	if(subTreeRoot == NULL)
 		return;
 	out << id << "[label=\"" << subTreeRoot->data << "\"];" << endl;
-	
+
 	if(id > 0)
 		out << (id - 1) / 2 << " -> " << id << ";" << endl;
-	
+
 	dottyPrint(out, subTreeRoot->left, 2*id + 1);
 	dottyPrint(out, subTreeRoot->right, 2*id + 2);
 }
