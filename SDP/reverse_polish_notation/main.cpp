@@ -7,7 +7,7 @@ struct Node
 	Node *left;
 	Node *right;
 
-	Node(string value, Node *left = NULL, Node *right = NULL)
+	Node(string value, Node *left = nullptr, Node *right = nullptr)
 		: value(value), left(left), right(right) {}
 
 	~Node() {delete left; delete right;}
@@ -17,24 +17,34 @@ Node* nodeFromStack(stack<string>& tokens, const OperatorRegistry& operatorsRegi
 {
 	string token = tokens.top();
 	tokens.pop();
-	if(!operatorsRegistry.hasOperatorFor(token))
+	int children = 0;
+	Node *leftChild = nullptr, *rightChild = nullptr;
+	if(operatorsRegistry.hasOperatorFor(token))
 	{
-		return new Node(token, NULL, NULL);
+		children = operatorsRegistry.getOperatorFor(token).getArgumentsCount();
 	}
-	return new Node(token, nodeFromStack(tokens, operatorsRegistry), nodeFromStack(tokens, operatorsRegistry));
+	if(children > 0)
+	{
+		rightChild = nodeFromStack(tokens, operatorsRegistry);
+	}
+	if(children > 1)
+	{
+		leftChild = nodeFromStack(tokens, operatorsRegistry);
+	}
+	return new Node(token, leftChild, rightChild);
 }
 
 void dottyPrint(Node* node, int id)
 {
-	if(node == NULL)
+	if(node == nullptr)
 		return;
 	std::cout << id << "[label=\"" << node->value << "\"];" << std::endl;
-	if(node->left != NULL)
+	if(node->left != nullptr)
 		std::cout << id << " -> " << 2*id + 1 << ";" << std::endl;
-	if(node->right != NULL)
+	if(node->right != nullptr)
 		std::cout << id << " -> " << 2*id + 2 << ";" << std::endl;
-	dottyPrint(node->right, 2*id + 1);
-	dottyPrint(node->left, 2*id + 2);
+	dottyPrint(node->right, 2*id + 2);
+	dottyPrint(node->left, 2*id + 1);
 
 }
 
@@ -58,4 +68,3 @@ int main()
 
 	return 0;
 }
-
