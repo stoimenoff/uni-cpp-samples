@@ -57,7 +57,7 @@ OperatorRegistry OperatorRegistry::Default()
 	Operator fact("!", 1, 11, [](vector<double> args){return factorial(args[0]);});
 	operatorsRegistry.registerOperator(fact);
 
-	Operator power("^", 2, 10, [](vector<double> args){return pow(args[0], args[1]);});
+	Operator power("^", 2, 10, [](vector<double> args){return pow(args[0], args[1]);}, false);
 	operatorsRegistry.registerOperator(power);
 
 	return operatorsRegistry;

@@ -16,15 +16,26 @@ class Operator
 	private:
 		double priority;
 		int numberOfArguments;
+		bool leftAssociative;
 		string symbol;
 		EvaluateFunction evaluateFunction;
 
 	public:
-		Operator(string symbol, int numberOfArguments, double priority, EvaluateFunction evaluateFunction)
-			: symbol(symbol), numberOfArguments(numberOfArguments), priority(priority), evaluateFunction(evaluateFunction) {}
+		Operator(string symbol, int numberOfArguments, double priority,
+				EvaluateFunction evaluateFunction)
+			: symbol(symbol), numberOfArguments(numberOfArguments),
+			priority(priority), evaluateFunction(evaluateFunction),
+			leftAssociative(true) {}
+
+		Operator(string symbol, int numberOfArguments, double priority,
+				EvaluateFunction evaluateFunction, bool leftAssociative)
+			: symbol(symbol), numberOfArguments(numberOfArguments),
+			priority(priority), evaluateFunction(evaluateFunction),
+			leftAssociative(leftAssociative) {}
 
 		int getArgumentsCount() const {return numberOfArguments;}
 		double getPriority() const {return priority;}
+		bool isLeftAssociative() const {return leftAssociative;}
 		string getSymbol() const {return symbol;}
 		double evaluate(vector<double> arguments) const;
 

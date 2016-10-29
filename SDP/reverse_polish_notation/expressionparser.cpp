@@ -21,7 +21,10 @@ bool ExpressionParser::shouldPopOperatorsStack(const stack<string>& operators, c
 
 	if(topOperator.getPriority() == candidateOperator.getPriority() && topOperator != candidateOperator)
 		return true;
-	
+
+	if(topOperator == candidateOperator)
+		return topOperator.isLeftAssociative();
+
 	return false;
 }
 
@@ -34,7 +37,7 @@ queue<string> ExpressionParser::getQueueReversedPolishNotationOf(const string& e
 
 	Token token;
 	// std::cerr << "-------------------" << std::endl;
-	while(tokenizer.present()) 
+	while(tokenizer.present())
 	{
 		token = tokenizer.get();
 		// std::cerr << "|" << token.value << "|" << std::endl;
