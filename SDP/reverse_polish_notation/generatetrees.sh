@@ -10,7 +10,7 @@ end='.pdf'
 while read expression; do
 	iter=$((iter + 1))
 	echo "$expression" > tmp
-	./a.out < tmp > test.dot
+	./rpn < tmp > test.dot
 	dot test.dot -Tpdf > $treesdir/$base$iter$end
 done < $filename
 rm tmp
