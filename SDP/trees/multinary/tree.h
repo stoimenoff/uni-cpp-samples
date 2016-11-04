@@ -3,11 +3,27 @@
 
 #include <list>
 #include <queue>
+#include <stack>
 #include <stdexcept>
+#include <algorithm>
+#include <iterator>
+#include <map>
 
 using std::list;
 using std::queue;
+using std::stack;
+using std::find;
 using std::logic_error;
+using std::iterator;
+using std::input_iterator_tag;
+using std::map;
+using std::pair;
+
+template<class T>
+class MulatinaryTree;
+
+template<class T>
+using TreeIterator = iterator<input_iterator_tag, MulatinaryTree<T> >;
 
 template<class T>
 class MulatinaryTree
@@ -20,16 +36,19 @@ class MulatinaryTree
 
 	public:
 		template<class R>
-		class BFSIterator
+		class BFSIterator : public TreeIterator<R>
 		{
 			private:
-				queue<const MulatinaryTree<T>*> trees;
+				queue<const MulatinaryTree<R>*> trees;
 			public:
-				BFSIterator(const MulatinaryTree<T>* root)
+				BFSIterator(const MulatinaryTree<R>* root = nullptr)
 				{
-					trees.push(root);
+					if(root != nullptr)
+					{
+						trees.push(root);
+					}
 				}
-				T operator*() const
+				R operator*() const
 				{
 					return trees.front()->getData();
 				}
@@ -56,7 +75,100 @@ class MulatinaryTree
 				{
 					return !trees.empty();
 				}
+				bool operator==(const BFSIterator<R>& other) const
+				{
+					return trees == other.trees;
+				}
+				bool operator!=(const BFSIterator<R>& other) const
+				{
+					return !(*this == other);
+				}
+		};
+		template<class R>
+		class DFSIterator : public TreeIterator<R>
+		{
+			private:
+				stack<const MulatinaryTree<R>*> trees;
+				void popAndAddChildrenToStack()
+				{
+					const MulatinaryTree<R>* tree = trees.top();
+					trees.pop();
+					auto iterator = (tree->children).rbegin();
+					while(iterator != (tree->children).rend())
+					{
+						trees.push(&*iterator);
+						++iterator;
+					}
+				}
+			public:
+				DFSIterator(const MulatinaryTree<R>* root = nullptr)
+				{
+					if(root != nullptr)
+					{
+						trees.push(root);
+					}
+				}
+				R operator*() const
+				{
+					return trees.top()->getData();
+				}
+				DFSIterator operator++()
+				{
+					DFSIterator cache = *this;
+					popAndAddChildrenToStack();
+					return cache;
+				}
+				DFSIterator& operator++(int)
+				{
+					popAndAddChildrenToStack();
+					return *this;
+				}
+				bool hasNext() const
+				{
+					return !trees.empty();
+				}
+				bool operator==(const DFSIterator<R>& other) const
+				{
+					return trees == other.trees;
+				}
+				bool operator!=(const DFSIterator<R>& other) const
+				{
+					return !(*this == other);
+				}
+		};
 
+		template<class R>
+		class BFSIteration
+		{
+			public:
+				BFSIteration(const MulatinaryTree<R>* tree) : tree(tree) {}
+				BFSIterator<R> begin()
+				{
+					return BFSIterator<R>(tree);
+				}
+				BFSIterator<R> end()
+				{
+					return BFSIterator<R>();
+				}
+			private:
+				const MulatinaryTree<R>* tree;
+		};
+
+		template<class R>
+		class DFSIteration
+		{
+			public:
+				DFSIteration(const MulatinaryTree<R>* tree) : tree(tree) {}
+				DFSIterator<R> begin()
+				{
+					return DFSIterator<R>(tree);
+				}
+				DFSIterator<R> end()
+				{
+					return DFSIterator<R>();
+				}
+			private:
+				const MulatinaryTree<R>* tree;
 		};
 		MulatinaryTree();
 		MulatinaryTree(const MulatinaryTree<T>&);
@@ -68,7 +180,8 @@ class MulatinaryTree
 		MulatinaryTree<T>& setData(const T& data);
 		T getData() const;
 
-		BFSIterator<T> BFS() const;
+		BFSIteration<T> BFS() const;
+		DFSIteration<T> DFS() const;
 };
 
 template<class T>
@@ -145,9 +258,15 @@ T  MulatinaryTree<T>::getData() const
 }
 
 template<class T>
-MulatinaryTree<T>::BFSIterator<T> MulatinaryTree<T>::BFS() const
+MulatinaryTree<T>::BFSIteration<T> MulatinaryTree<T>::BFS() const
 {
-	return BFSIterator<T>(this);
+	return MulatinaryTree<T>::BFSIteration<T>(this);
+}
+
+template<class T>
+MulatinaryTree<T>::DFSIteration<T> MulatinaryTree<T>::DFS() const
+{
+	return MulatinaryTree<T>::DFSIteration<T>(this);
 }
 
 #endif

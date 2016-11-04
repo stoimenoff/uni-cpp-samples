@@ -26,12 +26,14 @@ int main()
 		tree.addChild(getIntTree(i, {i + 1, i + 2, i + 3}));
 	}
 
-	auto it = tree.BFS();
-
-	while(it.hasNext())
+	for (auto element : tree.BFS())
 	{
-		cout << *it << endl;
-		++it;
+		cout << element << endl;
+	}
+
+	for (auto element : tree.DFS())
+	{
+		cout << element << endl;
 	}
 
 	return 0;
