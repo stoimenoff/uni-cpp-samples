@@ -65,5 +65,13 @@ int main()
 	}
 	intTree.prettyPrint();
 
+	cout << intTree.isBST() << endl;
+
+	BinaryTree<int> bst;
+
+	bst.add(15, "").add(12, "L").add(18, "R").add(11, "LL").add(17, "RL");
+
+	cout << bst.isBST() << endl;
+
 	return 0;
 }

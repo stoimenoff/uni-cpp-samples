@@ -47,6 +47,7 @@ private:
 	string findTrace(const T& element, Node<T>* subTreeRoot) const;
 	vector<T> level(int k, Node<T>* subTreeRoot) const;
 	vector<T*> depthTraverseInducedList(Node<T>* subTreeRoot) const;
+	vector<T*> leftRootRightInducedList(Node<T>* subTreeRoot) const;
 
 public:
 	BinaryTree();
@@ -76,6 +77,8 @@ public:
 
 	T& operator[](int i);
 	T operator[](int i) const;
+
+	bool isBST() const;
 
 };
 
@@ -387,6 +390,22 @@ vector<T*> BinaryTree<T>::depthTraverseInducedList(Node<T>* subTreeRoot) const
 }
 
 template <class T>
+vector<T*> BinaryTree<T>::leftRootRightInducedList(Node<T>* subTreeRoot) const
+{
+	vector<T*> elements;
+	if(subTreeRoot == nullptr)
+	{
+		return elements;
+	}
+	vector<T*> elementsFromLeft = leftRootRightInducedList(subTreeRoot->left);
+	vector<T*> elementsFromRight = leftRootRightInducedList(subTreeRoot->right);
+	elements.insert(elements.end(), elementsFromLeft.begin(), elementsFromLeft.end());
+	elements.push_back(&subTreeRoot->data);
+	elements.insert(elements.end(), elementsFromRight.begin(), elementsFromRight.end());
+	return elements;
+}
+
+template <class T>
 T& BinaryTree<T>::operator[](int i)
 {
 	return *depthTraverseInducedList(root).at(i);
@@ -396,6 +415,20 @@ template <class T>
 T BinaryTree<T>::operator[](int i) const
 {
 	return *depthTraverseInducedList(root).at(i);
+}
+
+template <class T>
+bool BinaryTree<T>::isBST() const
+{
+	vector<T*> elements = leftRootRightInducedList(root);
+	for (int i = 0; i < elements.size() - 1; ++i)
+	{
+		if(*elements[i] >= *elements[i + 1])
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 #endif // _TREE_H_
