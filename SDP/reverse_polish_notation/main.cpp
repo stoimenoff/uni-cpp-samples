@@ -34,6 +34,34 @@ Node* nodeFromStack(stack<string>& tokens, const OperatorRegistry& operatorsRegi
 	return new Node(token, leftChild, rightChild);
 }
 
+Node* nodeFromQueue(queue<string>& tokens, const OperatorRegistry& operatorsRegistry)
+{
+	stack<Node*> cachedNodes;
+	while(!tokens.empty())
+	{
+		string token = tokens.front();
+		tokens.pop();
+		int children = 0;
+		Node *leftChild = nullptr, *rightChild = nullptr;
+		if(operatorsRegistry.hasOperatorFor(token))
+		{
+			children = operatorsRegistry.getOperatorFor(token).getArgumentsCount();
+		}
+		if(children > 0)
+		{
+			rightChild = cachedNodes.top();
+			cachedNodes.pop();
+		}
+		if(children > 1)
+		{
+			leftChild = cachedNodes.top();
+			cachedNodes.pop();
+		}
+		cachedNodes.push(new Node(token, leftChild, rightChild));
+	}
+	return cachedNodes.top();
+}
+
 void dottyPrint(Node* node, int id)
 {
 	if(node == nullptr)
@@ -65,6 +93,9 @@ int main()
 	stack<string> tokens = parser.getStackReversedPolishNotationOf(input);
 
 	dottyPrint(nodeFromStack(tokens, parser.getOperatorsRegistry()));
+
+	// queue<string> tokensq = parser.getQueueReversedPolishNotationOf(input);
+	// dottyPrint(nodeFromQueue(tokensq, parser.getOperatorsRegistry()));
 
 	return 0;
 }
