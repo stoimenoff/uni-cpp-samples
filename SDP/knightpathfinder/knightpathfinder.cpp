@@ -15,78 +15,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-const int BOARD_SIZE = 8;
-
-typedef pair<char, int> Position;
-typedef pair<int, int> Displacement;
-typedef array<array<Position, BOARD_SIZE>, BOARD_SIZE> ChessBoard;
-typedef array<array<char, BOARD_SIZE>, BOARD_SIZE> WayBoard;
-
-const Position CONTROL(' ', 0);
-
-ostream& operator<<(ostream& out, const Position& position)
-{
-	out << position.first << position.second;
-	return out;
-}
-
-ostream& operator<<(ostream& out, const ChessBoard& board)
-{
-	for (array<Position, BOARD_SIZE> row : board)
-	{
-		for (Position &position : row)
-		{
-			out << position << " ";
-		}
-		out << endl;
-	}
-	return out;
-}
-
-ostream& operator<<(ostream& out, const WayBoard& board)
-{
-	for (array<char, BOARD_SIZE> row : board)
-	{
-		for (char &c : row)
-		{
-			out << c << " ";
-		}
-		out << endl;
-	}
-	return out;
-}
-
-bool operator==(const Position& position1, const Position& position2)
-{
-	return position1.first == position2.first && position1.second == position2.second;
-}
-
-Position operator+(const Position& position, const Displacement& displacement)
-{
-	return Position(position.first + displacement.first, position.second + displacement.second);
-}
-
-void init(WayBoard& wayBoard)
-{
-	for (int i = 0; i < BOARD_SIZE; ++i)
-	{
-		for (int j = 0; j < BOARD_SIZE; ++j)
-		{
-			wayBoard[i][j] = '-';
-		}
-	}
-}
-
-bool isValidPosition(Position position)
-{
-	char letter = position.first;
-	int number = position.second;
-	if(letter < 'A' || letter > 'A' + BOARD_SIZE - 1)
-		return false;
-	if(number < 1 || number > BOARD_SIZE)
-		return false;
-	return true;
-}
+#include "chess.h"
+using namespace Chess;
 
 const vector<Displacement> displacements = {
 										Displacement(-2, -1),
@@ -112,25 +42,6 @@ vector<Position> positionsibleMoves(Position currentPosition)
 	return moves;
 }
 
-//vector set difference
-vector<Position> operator/(vector<Position> v1, vector<Position> v2)
-{
-	vector<Position> difference;
-	for(Position& position : v1)
-	{
-		if(find(v2.begin(), v2.end(), position) == v2.end())
-			difference.push_back(position);
-	}
-	return difference;
-}
-
-Position inputPosition()
-{
-	char initialLetter;
-	int initialNumber;
-	cin >> initialLetter >> initialNumber;
-	return Position(initialLetter, initialNumber);
-}
 
 int calculateDistance(Position initialPosition, Position desiredPosition)
 {
