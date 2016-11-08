@@ -180,6 +180,8 @@ class MulatinaryTree
 		MulatinaryTree<T>& setData(const T& data);
 		T getData() const;
 
+		list<MulatinaryTree<T>> getChildren() const;
+
 		BFSIteration<T> BFS() const;
 		DFSIteration<T> DFS() const;
 };
@@ -255,6 +257,12 @@ T  MulatinaryTree<T>::getData() const
 	if(data == nullptr)
 		throw logic_error("The tree is empty");
 	return *data;
+}
+
+template<class T>
+list<MulatinaryTree<T>> MulatinaryTree<T>::getChildren() const
+{
+	return children;
 }
 
 template<class T>
