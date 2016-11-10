@@ -1,4 +1,7 @@
 #include "tree.h"
+#include <iomanip>
+
+using std::boolalpha;
 
 int main()
 {
@@ -71,7 +74,13 @@ int main()
 
 	bst.add(15, "").add(12, "L").add(18, "R").add(11, "LL").add(17, "RL");
 
+	cout << boolalpha;
 	cout << bst.isBST() << endl;
+	cout << bst.isSymetrical() << endl;
+
+	BinaryTree<int> symetricTree;
+	symetricTree.add(15, "").add(12, "L").add(12, "R").add(11, "LL").add(11, "RR");
+	cout << symetricTree.isSymetrical() << endl;
 
 	return 0;
 }

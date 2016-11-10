@@ -49,6 +49,8 @@ private:
 	vector<T*> depthTraverseInducedList(Node<T>* subTreeRoot) const;
 	vector<T*> leftRootRightInducedList(Node<T>* subTreeRoot) const;
 
+	bool areMirrored(Node<T>* subTreeRoot1, Node<T>* subTreeRoot2) const;
+
 public:
 	BinaryTree();
 	BinaryTree(const BinaryTree<T>& other);
@@ -79,6 +81,7 @@ public:
 	T operator[](int i) const;
 
 	bool isBST() const;
+	bool isSymetrical() const;
 
 };
 
@@ -429,6 +432,27 @@ bool BinaryTree<T>::isBST() const
 		}
 	}
 	return true;
+}
+
+template <class T>
+bool BinaryTree<T>::areMirrored(Node<T>* subTreeRoot1, Node<T>* subTreeRoot2) const
+{
+	if(subTreeRoot1 == nullptr && subTreeRoot2 == nullptr)
+		return true;
+	if(subTreeRoot1 == nullptr || subTreeRoot2 == nullptr)
+		return false;
+	if(subTreeRoot1->data != subTreeRoot2->data)
+		return false;
+	return areMirrored(subTreeRoot1->left, subTreeRoot2->right) &&
+			areMirrored(subTreeRoot1->right, subTreeRoot2->left);
+}
+
+template <class T>
+bool BinaryTree<T>::isSymetrical() const
+{
+	if(root == nullptr)
+		return true;
+	return areMirrored(root->left, root->right);
 }
 
 #endif // _TREE_H_
