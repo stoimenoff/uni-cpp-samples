@@ -50,6 +50,7 @@ private:
 	vector<T*> leftRootRightInducedList(Node<T>* subTreeRoot) const;
 
 	bool areMirrored(Node<T>* subTreeRoot1, Node<T>* subTreeRoot2) const;
+	vector<vector<T>> pathsToLeaves(Node<T>* subTreeRoot) const;
 
 public:
 	BinaryTree();
@@ -82,6 +83,7 @@ public:
 
 	bool isBST() const;
 	bool isSymetrical() const;
+	vector<vector<T>> pathsToLeaves() const;
 
 };
 
@@ -453,6 +455,40 @@ bool BinaryTree<T>::isSymetrical() const
 	if(root == nullptr)
 		return true;
 	return areMirrored(root->left, root->right);
+}
+
+template <class T>
+vector<vector<T>> BinaryTree<T>::pathsToLeaves() const
+{
+	return pathsToLeaves(root);
+}
+
+template <class T>
+vector<vector<T>> BinaryTree<T>::pathsToLeaves(Node<T>* subTreeRoot) const
+{
+	vector<vector<T>> paths;
+	if(subTreeRoot->left == nullptr && subTreeRoot->right == nullptr)
+	{
+		vector<T> path = {subTreeRoot->data};
+		paths.push_back(path);
+		return paths;
+	}
+	if(subTreeRoot->left != nullptr)
+	{
+			vector<vector<T>> left = pathsToLeaves(subTreeRoot->left);
+			paths.insert(paths.end(), left.begin(), left.end());
+	}
+	if(subTreeRoot->right != nullptr)
+	{
+		vector<vector<T>> right = pathsToLeaves(subTreeRoot->right);
+		paths.insert(paths.end(), right.begin(), right.end());
+	}
+	for(auto &path : paths)
+	{
+		// path.push_back(subTreeRoot->data);
+		path.insert(path.begin(), subTreeRoot->data);
+	}
+	return paths;
 }
 
 #endif // _TREE_H_

@@ -82,5 +82,15 @@ int main()
 	symetricTree.add(15, "").add(12, "L").add(12, "R").add(11, "LL").add(11, "RR");
 	cout << symetricTree.isSymetrical() << endl;
 
+
+	for(auto path : intTree.pathsToLeaves())
+	{
+		for(auto element : path)
+		{
+			cout << element << " ";
+		}
+		cout << endl;
+	}
+
 	return 0;
 }
