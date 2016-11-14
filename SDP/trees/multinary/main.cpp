@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include <iomanip>
+#include <sstream>
 
 using std::cin;
 using std::cout;
@@ -10,6 +11,7 @@ using std::endl;
 using std::vector;
 using std::queue;
 using std::boolalpha;
+using std::stringstream;
 
 MulatinaryTree<int> getIntTree(int data, vector<int> childrenData)
 {
@@ -110,6 +112,17 @@ int main()
 	cout << isElement(tree, 12) << endl;
 
 	cout << depth(tree) << endl;
+
+	stringstream treeStream("(5((9()),(1((4()),(12()),(42()))))");
+	MulatinaryTree<int> inputTree = extractTree(treeStream);
+	cout << "---------BFS---------" << endl;
+	for (auto element : inputTree.BFS())
+	{
+		cout << element << endl;
+	}
+	cout << "---------------------" << endl;
+
+	cout << heaviestPath(inputTree) << endl;
 
 	return 0;
 }

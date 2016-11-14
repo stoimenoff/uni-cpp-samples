@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <iterator>
 #include <map>
+#include <istream>
+#include <algorithm>
 
 using std::list;
 using std::queue;
@@ -18,6 +20,8 @@ using std::iterator;
 using std::input_iterator_tag;
 using std::map;
 using std::pair;
+using std::istream;
+using std::max;
 
 template<class T>
 class MulatinaryTree;
@@ -275,6 +279,40 @@ template<class T>
 MulatinaryTree<T>::DFSIteration<T> MulatinaryTree<T>::DFS() const
 {
 	return MulatinaryTree<T>::DFSIteration<T>(this);
+}
+
+/*Utils*/
+MulatinaryTree<int> extractTree(istream& in)
+{
+	MulatinaryTree<int> tree;
+	int root;
+	in.get(); //dicsard (
+	in >> root;
+	tree.setData(root);
+	in.get(); //dicsard (
+	if(in.peek() == ')')
+	{
+		in.get(); in.get(); // dicsard (s
+		return tree;
+	}
+	tree.addChild(extractTree(in));
+	while(in.peek() == ',')
+	{
+		in.get(); // dicsard ,
+		tree.addChild(extractTree(in));
+	}
+	in.get(); in.get(); // dicsard (s
+	return tree;
+}
+
+int heaviestPath(const MulatinaryTree<int>& tree)
+{
+	int maxFromChildren = 0;
+	for(auto child : tree.getChildren())
+	{
+		maxFromChildren = max(maxFromChildren, heaviestPath(child));
+	}
+	return maxFromChildren + tree.getData();
 }
 
 #endif
