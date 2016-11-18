@@ -49,7 +49,6 @@ class KnightConfigurator
 		bool canPlaceHorse(Position position) const;
 		vector<Position> getAllPossiblePositions() const;
 
-		int knights;
 		vector<vector<bool>> board;
 		stack<Step> solutionSteps;
 };

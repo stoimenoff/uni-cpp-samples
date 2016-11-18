@@ -10,7 +10,7 @@ const vector<Position> KnightConfigurator::knightMoves = {
 	Position(-1, 2), Position(1, -2), Position(1, 2),
 	Position(2, -1), Position(2, 1)};
 
-KnightConfigurator::KnightConfigurator(int knights, int boardSize) : knights(knights)
+KnightConfigurator::KnightConfigurator(int knights, int boardSize)
 {
 	board.resize(boardSize);
 	for(vector<bool>& row : board)
@@ -101,5 +101,13 @@ void KnightConfigurator::findNextConfiguration()
 
 bool KnightConfigurator::hasNextConfiguration() const
 {
-	return !solutionSteps.empty();
+	stack<Step> solutionStepsCopy = solutionSteps;
+	while(!solutionStepsCopy.empty())
+	{
+		Step nextStep = solutionStepsCopy.top();
+		solutionStepsCopy.pop();
+		if(nextStep.type != Step::REMOVE_FROM_POSITION)
+			return true;
+	}
+	return false;
 }

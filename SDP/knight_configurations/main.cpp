@@ -7,7 +7,7 @@ using std::endl;
 
 int main()
 {
-	KnightConfigurator configurator(4, 3);
+	KnightConfigurator configurator(2, 2);
 	while(configurator.hasNextConfiguration())
 	{
 		cout << "+++++++++++++++++++++++" << endl;
