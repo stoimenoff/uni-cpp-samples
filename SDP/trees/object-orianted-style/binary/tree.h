@@ -6,6 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "node.h"
 
@@ -14,6 +15,7 @@ using std::string;
 using std::cout;
 using std::endl;
 using std::ostream;
+using std::max;
 
 template <class ParameterType, class ResultType>
 using mapper = ResultType (*)(const ParameterType&);
@@ -30,9 +32,11 @@ private:
 	void dottyPrint (ostream&, Node<T> *subTreeRoot, int id) const;
 	void prettyPrint(Node<T> *subTreeRoot, int level) const;
 	bool add (const T& data, const char *trace, Node<T>*&);
+	T get (Node<T>* subTreeRoot, const char *trace) const;
 	bool member (const T&, Node<T> *subTreeRoot) const;
 	void deleteAll (Node<T> *subTreeRoot);
 	void copyTree(Node<T>* &targetRoot, const Node<T>* sourceRoot);
+	size_t height(Node<T>* subTreeRoot) const;
 
 	template <class R>
 	Node<R>* map(mapper<T, R> mapping, Node<T> *subTreeRoot) const;
@@ -63,10 +67,12 @@ public:
 	~BinaryTree();
 
 	BinaryTree<T>& add (const T& data, const char *trace);
+	T get (const char *trace) const;
 	const BinaryTree<T>& simplePrint () const;
 	const BinaryTree<T>& dottyPrint (ostream&) const;
 	const BinaryTree<T>& prettyPrint() const;
 	bool member (const T&) const;
+	size_t height() const;
 
 	template <class R>
 	BinaryTree<R> map(mapper<T, R> mapping) const;
@@ -489,6 +495,42 @@ vector<vector<T>> BinaryTree<T>::pathsToLeaves(Node<T>* subTreeRoot) const
 		path.insert(path.begin(), subTreeRoot->data);
 	}
 	return paths;
+}
+
+template <class T>
+size_t BinaryTree<T>::height() const
+{
+	return height(root);
+}
+
+template <class T>
+size_t BinaryTree<T>::height(Node<T>* subTreeRoot) const
+{
+	if(subTreeRoot == nullptr)
+	{
+		return 0;
+	}
+	return max(height(subTreeRoot->left), height(subTreeRoot->right)) + 1;
+}
+
+template <class T>
+T BinaryTree<T>::get (Node<T>* subTreeRoot, const char *trace) const
+{
+	if (subTreeRoot == nullptr)
+		assert (false); // no element
+	if (strlen(trace) == 0)
+		return subTreeRoot->data;
+	if (trace[0]=='L')
+		return get (subTreeRoot->left, trace + 1);
+	if (trace[0]=='R')
+		return get (subTreeRoot->right, trace + 1);
+	assert(false); // no element
+}
+
+template <class T>
+T BinaryTree<T>::get (const char *trace) const
+{
+	return get(root, trace);
 }
 
 #endif // _TREE_H_
