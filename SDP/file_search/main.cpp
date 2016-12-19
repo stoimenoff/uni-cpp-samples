@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include "filetokenizer.h"
-#include "stringtokenizer.h"
 
 using std::cin;
 using std::cout;
@@ -66,7 +65,6 @@ pair<vector<string>, string> parseArguments(int argc, char* argv[])
 	string delimiters;
 	for (int i = 1; i < argc; ++i)
 	{
-		// cout << argv[i] << endl;
 		if (string(argv[i]) == "-d" || string(argv[i]) == "-dnst")
 		{
 			delimiters += argv[i + 1];
