@@ -7,6 +7,7 @@
 #include "filetokenizer.h"
 #include "stringtokenizer.h"
 
+using std::cin;
 using std::cout;
 using std::endl;
 using std::vector;
@@ -41,21 +42,96 @@ unordered_map<string, unordered_set<string>> filesTokens(const vector<string>& f
 	return allTokens;
 }
 
-int main()
+void printFileSet(const unordered_set<string>& filenames)
 {
-	const string DELIMITERS = " ,.\n:";
-	vector<string> filesnames = {"test", "file1.txt", "file2.txt",
-								"file3.txt", "file4.txt"};
+	for(const string& filename : filenames)
+	{
+		cout << filename << endl;
+	}
+}
 
-	for(const pair<string, unordered_set<string>>& entry : filesTokens(filesnames, DELIMITERS))
+void printTokens(unordered_map<string, unordered_set<string>> tokensRegistry)
+{
+	for(const pair<string, unordered_set<string>>& entry : tokensRegistry)
 	{
 		cout << "Token: \"" << entry.first << "\" found in files:" << endl;
-		for(const string& filename : entry.second)
+		printFileSet(entry.second);
+	}
+}
+
+pair<vector<string>, string> parseArguments(int argc, char* argv[])
+{
+	const string DEFAULT_DELIMITERS = " ,.\n:";
+	vector<string> filesnames;
+	string delimiters;
+	for (int i = 1; i < argc; ++i)
+	{
+		// cout << argv[i] << endl;
+		if (string(argv[i]) == "-d" || string(argv[i]) == "-dnst")
 		{
-			cout << filename << endl;
+			delimiters += argv[i + 1];
+			if(string(argv[i]) == "-dnst")
+				delimiters += " \n\t";
+			++i; // skip next argument, because it's delimiters
+		}
+		else if(string(argv[i]) == "-nst")
+		{
+			delimiters += " \n\t";
+		}
+		else if(string(argv[i]) == "-n")
+		{
+			delimiters += '\n';
+		}
+		else if(string(argv[i]) == "-s")
+		{
+			delimiters += ' ';
+		}
+		else if(string(argv[i]) == "-t")
+		{
+			delimiters += '\t';
+		}
+		else
+		{
+			filesnames.push_back(string(argv[i]));
 		}
 	}
+	if(delimiters.empty())
+		delimiters = DEFAULT_DELIMITERS;
+	return make_pair(filesnames, delimiters);
+}
 
+void serveQuery(string query, const string& delimiters,
+		unordered_map<string, unordered_set<string>>& tokensRegistry)
+{
+	StringTokenizer queryTokens(query, delimiters);
+	string token;
+	while(queryTokens.hasToken())
+	{
+		token = queryTokens.getToken();
+		if(tokensRegistry.find(token) != tokensRegistry.end())
+		{
+			cout << "Token: \"" << token << "\" found in files:" << endl;
+			printFileSet(tokensRegistry[token]);
+		}
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	auto arguments = parseArguments(argc, argv);
+	vector<string> filesnames = arguments.first;
+	string delimiters = arguments.second;
+
+	auto tokensRegistry = filesTokens(filesnames, delimiters);
+	printTokens(tokensRegistry);
+
+	string query;
+	do
+	{
+		getline(cin, query);
+		serveQuery(query, delimiters, tokensRegistry);
+	}
+	while (!query.empty());
 
 	return 0;
 }
