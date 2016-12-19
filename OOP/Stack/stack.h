@@ -28,7 +28,7 @@ class Stack
 	friend std::ostream& operator << (std::ostream& out, const Stack<M>& stack);
 
 	private:
-		
+
 		Node<T>* top;
 		int size;
 		void deleteElements();
@@ -72,7 +72,7 @@ Stack<T>::Stack()
 template <typename T>
 Stack<T>::Stack(const Stack<T>& other)
 {
-	copyElements(other);	
+	copyElements(other);
 }
 template <typename T>
 Stack<T>& Stack<T>::operator = (const Stack<T>& other)
