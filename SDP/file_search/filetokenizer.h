@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "stringtokenizer.h"
+
 using std::string;
 using std::ifstream;
 using std::getline;
@@ -17,11 +19,13 @@ class FileTokenizer
 		string peekToken();
 		bool hasToken();
 	private:
-		string extractTokenFromStream();
+		void eraseTrailingDelimitersFromStream();
+		void prepareBuffer();
+		string getBufferFromStream();
 		ifstream stream;
 		string delimiters;
-		string buffer;
-		string preparedToken;
+		StringTokenizer bufferTokenizer;
+
 };
 
 #endif

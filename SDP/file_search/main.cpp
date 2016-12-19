@@ -1,4 +1,5 @@
-#include "tokenizer.h"
+#include "filetokenizer.h"
+#include "stringtokenizer.h"
 #include <sstream>
 #include <algorithm>
 
@@ -15,5 +16,16 @@ int main()
 	{
 		cout << tokenizer.getToken() << endl;
 	}
+
+
+	cout << "==============" << endl;
+
+	StringTokenizer stokenizer("token1,token2, token3 t4 tok5 tok6,  ", DELIMITERS);
+
+	while(stokenizer.hasToken())
+	{
+		cout << stokenizer.getToken() << endl;
+	}
+
 	return 0;
 }
