@@ -76,6 +76,7 @@ template <class T>
 void Bucket<T>::deleteData()
 {
 	delete data;
+	data = nullptr;
 }
 
 #endif

@@ -21,9 +21,9 @@ class Trie
 		bool isLeaf() const;
 	public:
 		Trie<T>& set(const string& key, const T& value);
-		bool containsKey(const string& key) const;
+		bool contains(const string& key) const;
 		const T& get(const string& key) const;
-		Trie<T>& removeByKey(const string& key);
+		Trie<T>& remove(const string& key);
 };
 
 template <class T>
@@ -37,13 +37,13 @@ Trie<T>& Trie<T>::set(const string& key, const T& value)
 }
 
 template <class T>
-bool Trie<T>::containsKey(const string& key) const
+bool Trie<T>::contains(const string& key) const
 {
 	if (key.empty())
 		return bucket.hasData();
 	if (children.find(key.front()) == children.end())
 		return false;
-	return children.at(key.front()).containsKey(key.substr(1));
+	return children.at(key.front()).contains(key.substr(1));
 
 }
 
@@ -69,7 +69,7 @@ bool Trie<T>::isRedundant() const
 }
 
 template <class T>
-Trie<T>& Trie<T>::removeByKey(const string& key)
+Trie<T>& Trie<T>::remove(const string& key)
 {
 	if (key.empty())
 	{
@@ -77,7 +77,7 @@ Trie<T>& Trie<T>::removeByKey(const string& key)
 	}
 	else
 	{
-		children.at(key.front()).removeByKey(key.substr(1));
+		children.at(key.front()).remove(key.substr(1));
 		/* Backtrack to remove nodes if they have become redundant
 			after the deletion. */
 		if (children.at(key.front()).isRedundant())

@@ -16,11 +16,17 @@ void testBasicsTrie()
 
 	cout << map.get("babati2dyadoti") << endl;
 
-	assert(map.containsKey("babati2dyadoti"));
-	assert(map.containsKey("babati"));
-	assert(map.containsKey("babati2"));
-	assert(!map.containsKey("baba"));
-	assert(!map.containsKey(""));
+	assert(map.contains("babati2dyadoti"));
+	assert(map.contains("babati"));
+	assert(map.contains("babati2"));
+	assert(!map.contains("baba"));
+	assert(!map.contains(""));
+
+	map.remove("babati");
+	map.remove("babati2dyadoti");
+
+	assert(!map.contains("babati"));
+	assert(!map.contains("babati2dyadoti"));
 
 }
 
