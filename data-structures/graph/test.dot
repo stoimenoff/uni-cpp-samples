@@ -1,0 +1,13 @@
+digraph G
+{
+1[label="gosho"];
+4[label="igracha"];
+2[label="penka"];
+0[label="pesho"];
+3[label="stamat"];
+0 -> 2;
+0 -> 1;
+2 -> 0;
+3 -> 1;
+4 -> 2;
+}
