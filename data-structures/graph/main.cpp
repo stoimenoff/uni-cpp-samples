@@ -20,8 +20,11 @@ int main()
 	// names.deleteEdge("penka", "pesho");
 	// names.deleteVertex("gosho");
 
-	names.addVertex("igracha");
-	names.addEdge("igracha", "penka");
+	names.addVertex("kiro");
+	names.addEdge("kiro", "penka");
+
+	for (const string& vertex : names.getVertexes())
+		std::cout << vertex << std::endl;
 
 	names.dottyPrint(std::cerr);
 

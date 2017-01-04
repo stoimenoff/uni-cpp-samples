@@ -37,6 +37,7 @@ class Graph
 		void deleteEdge(const T& firstVertexData, const T& secondVertexData);
 		void dottyPrint(ostream& out) const;
 		list<T> getAdjacent(const T& vertexData) const;
+		list<T> getVertexes() const;
 };
 
 template <class T>
@@ -94,6 +95,15 @@ list<T> Graph<T>::getAdjacent(const T& vertexData) const
 	for (size_t id : vertexes.at(ids.at(vertexData)).adjacentIDs)
 		adjacent.push_back(vertexes.at(id).data);
 	return adjacent;
+}
+
+template <class T>
+list<T> Graph<T>::getVertexes() const
+{
+	list<T> vertexesData;
+	for (const auto& entry : vertexes)
+		vertexesData.push_back(entry.second.data);
+	return vertexesData;
 }
 
 #endif
