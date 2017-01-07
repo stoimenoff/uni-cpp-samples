@@ -5,7 +5,7 @@
 #include <stack>
 #include <algorithm>
 
-#include "node.h"
+#include "../node.h"
 
 using std::unordered_set;
 using std::stack;

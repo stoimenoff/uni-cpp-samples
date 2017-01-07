@@ -10,7 +10,7 @@
 #include <string>
 #include <algorithm>
 
-#include "node.h"
+#include "../node.h"
 
 using std::vector;
 using std::stack;
