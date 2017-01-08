@@ -62,12 +62,12 @@ class BinaryTree
 			Transformer parent() const;
 
 			/*Modifiers*/
-			Transformer& addNewDataNode(const T& data);
-			Transformer& changeData(const T& data);
-			BinaryTree<T> abandonLeftSubtree();
-			BinaryTree<T> abandonRightSubtree();
-			void adoptAsLeftSubtree(BinaryTree<T>&);
-			void adoptAsRightSubtree(BinaryTree<T>&);
+			Transformer& addNewDataNode(const T& data) const;
+			Transformer& changeData(const T& data) const;
+			BinaryTree<T> abandonLeftSubtree() const;
+			BinaryTree<T> abandonRightSubtree() const;
+			void adoptAsLeftSubtree(BinaryTree<T>&) const;
+			void adoptAsRightSubtree(BinaryTree<T>&) const;
 		};
 
 	friend class Transformer;
@@ -285,7 +285,7 @@ typename BinaryTree<T>::Transformer BinaryTree<T>::Transformer::parent() const
 }
 
 template <class T>
-typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addNewDataNode(const T& data)
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addNewDataNode(const T& data) const
 {
 	if (!Inspector::isEmpty())
 		throw runtime_error("Tree is NOT empty.");
@@ -307,7 +307,7 @@ typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addNewDataNode(
 }
 
 template <class T>
-typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(const T& data)
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(const T& data) const
 {
 	if (Inspector::isEmpty())
 	{
@@ -321,7 +321,7 @@ typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(cons
 }
 
 template <class T>
-BinaryTree<T> BinaryTree<T>::Transformer::abandonLeftSubtree()
+BinaryTree<T> BinaryTree<T>::Transformer::abandonLeftSubtree() const
 {
 	Inspector::ensureNotEmpty();
 	BinaryTree<T> leftSubTree;
@@ -331,7 +331,7 @@ BinaryTree<T> BinaryTree<T>::Transformer::abandonLeftSubtree()
 }
 
 template <class T>
-BinaryTree<T> BinaryTree<T>::Transformer::abandonRightSubtree()
+BinaryTree<T> BinaryTree<T>::Transformer::abandonRightSubtree() const
 {
 	Inspector::ensureNotEmpty();
 	BinaryTree<T> rightSubTree;
@@ -341,7 +341,7 @@ BinaryTree<T> BinaryTree<T>::Transformer::abandonRightSubtree()
 }
 
 template <class T>
-void BinaryTree<T>::Transformer::adoptAsLeftSubtree(BinaryTree<T>& newLeftSubtree)
+void BinaryTree<T>::Transformer::adoptAsLeftSubtree(BinaryTree<T>& newLeftSubtree) const
 {
 	Inspector::ensureNotEmpty();
 	if (Inspector::hasLeft())
@@ -351,7 +351,7 @@ void BinaryTree<T>::Transformer::adoptAsLeftSubtree(BinaryTree<T>& newLeftSubtre
 }
 
 template <class T>
-void BinaryTree<T>::Transformer::adoptAsRightSubtree(BinaryTree<T>& newRightSubtree)
+void BinaryTree<T>::Transformer::adoptAsRightSubtree(BinaryTree<T>& newRightSubtree) const
 {
 	Inspector::ensureNotEmpty();
 	if (Inspector::hasRight())
