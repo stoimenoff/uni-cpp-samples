@@ -38,8 +38,15 @@ class BinaryTree
 				Inspector& goRight();
 				Inspector& goToParent();
 
+				Inspector left() const;
+				Inspector right() const;
+				Inspector parent() const;
+
 				bool isLeaf() const;
 				const T& getData() const;
+				const T& getParentData() const;
+				const T& getLeftData() const;
+				const T& getRightData() const;
 		};
 
 		class Transformer : public Inspector
@@ -178,6 +185,32 @@ typename BinaryTree<T>::Inspector& BinaryTree<T>::Inspector::goToParent()
 }
 
 template <class T>
+typename BinaryTree<T>::Inspector BinaryTree<T>::Inspector::left() const
+{
+	ensureNotEmpty();
+	Inspector inspector(currentNode->left);
+	inspector.previousNode = currentNode;
+	return inspector;
+}
+
+template <class T>
+typename BinaryTree<T>::Inspector BinaryTree<T>::Inspector::right() const
+{
+	ensureNotEmpty();
+	Inspector inspector(currentNode->right);
+	inspector.previousNode = currentNode;
+	return inspector;
+}
+
+template <class T>
+typename BinaryTree<T>::Inspector BinaryTree<T>::Inspector::parent() const
+{
+	if (isEmpty())
+		return Inspector(previousNode);
+	return Inspector(currentNode->parent);
+}
+
+template <class T>
 bool BinaryTree<T>::Inspector::isLeaf() const
 {
 	return !hasLeft() && !hasRight();
@@ -188,6 +221,26 @@ const T& BinaryTree<T>::Inspector::getData() const
 {
 	ensureNotEmpty();
 	return currentNode->data;
+}
+
+template <class T>
+const T& BinaryTree<T>::Inspector::getParentData() const
+{
+	if (currentNode == nullptr)
+		return Inspector(previousNode).getData();
+	return Inspector(currentNode->parent).getData();
+}
+
+template <class T>
+const T& BinaryTree<T>::Inspector::getLeftData() const
+{
+	return Inspector(currentNode->left).getData();
+}
+
+template <class T>
+const T& BinaryTree<T>::Inspector::getRightData() const
+{
+	return Inspector(currentNode->right).getData();
 }
 
 
