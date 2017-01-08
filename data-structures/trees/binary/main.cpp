@@ -38,14 +38,14 @@ int main()
 
 	BinaryTree<int>::Transformer tr = tree.getTransformer();
 
-	tr.addNewDataNode(5);
+	tr.addData(5);
 
 	tr.goLeft();
-	tr.addNewDataNode(2);
+	tr.addData(2);
 
 	tr.goToParent();
 	tr.goRight();
-	tr.addNewDataNode(3);
+	tr.addData(3);
 
 	dotPrint(cout, tree);
 

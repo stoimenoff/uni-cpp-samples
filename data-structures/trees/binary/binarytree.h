@@ -62,8 +62,8 @@ class BinaryTree
 			Transformer parent() const;
 
 			/*Modifiers*/
-			Transformer& addNewDataNode(const T& data) const;
-			Transformer& changeData(const T& data) const;
+			Transformer& addData(const T& data);
+			Transformer& changeData(const T& data);
 			BinaryTree<T> abandonLeftSubtree() const;
 			BinaryTree<T> abandonRightSubtree() const;
 			void adoptAsLeftSubtree(BinaryTree<T>&) const;
@@ -285,7 +285,7 @@ typename BinaryTree<T>::Transformer BinaryTree<T>::Transformer::parent() const
 }
 
 template <class T>
-typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addNewDataNode(const T& data) const
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addData(const T& data)
 {
 	if (!Inspector::isEmpty())
 		throw runtime_error("Tree is NOT empty.");
@@ -307,11 +307,11 @@ typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addNewDataNode(
 }
 
 template <class T>
-typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(const T& data) const
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(const T& data)
 {
 	if (Inspector::isEmpty())
 	{
-		addNewDataNode(data);
+		addData(data);
 	}
 	else
 	{
