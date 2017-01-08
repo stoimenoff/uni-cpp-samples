@@ -52,6 +52,15 @@ class BinaryTree
 				Node<T> **treeRootPointer;
 			public:
 			Transformer(Node<T>**);
+			/*Override Inspector functions to return Transformer*/
+			Transformer& goLeft();
+			Transformer& goRight();
+			Transformer& goToParent();
+
+			Transformer left() const;
+			Transformer right() const;
+			Transformer parent() const;
+
 			/*Modifiers*/
 			Transformer& addNewDataNode(const T& data);
 			Transformer& changeData(const T& data);
@@ -231,37 +240,82 @@ BinaryTree<T>::Transformer::Transformer(Node<T>** treeRootPointer)
 	: Inspector(*treeRootPointer), treeRootPointer(treeRootPointer) {}
 
 template <class T>
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::goLeft()
+{
+	Inspector::goLeft();
+	return *this;
+}
+
+template <class T>
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::goRight()
+{
+	Inspector::goRight();
+	return *this;
+}
+
+template <class T>
+typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::goToParent()
+{
+	Inspector::goToParent();
+	return *this;
+}
+
+template <class T>
+typename BinaryTree<T>::Transformer BinaryTree<T>::Transformer::left() const
+{
+	Transformer leftTransformer = *this;
+	leftTransformer.Inspector::goLeft();
+	return leftTransformer;
+}
+
+template <class T>
+typename BinaryTree<T>::Transformer BinaryTree<T>::Transformer::right() const
+{
+	Transformer rightTransformer = *this;
+	rightTransformer.Inspector::goRight();
+	return rightTransformer;
+}
+
+template <class T>
+typename BinaryTree<T>::Transformer BinaryTree<T>::Transformer::parent() const
+{
+	Transformer parentTransformer = *this;
+	parentTransformer.Inspector::goToParent();
+	return parentTransformer;
+}
+
+template <class T>
 typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addNewDataNode(const T& data)
 {
-	if (!this->isEmpty())
+	if (!Inspector::isEmpty())
 		throw runtime_error("Tree is NOT empty.");
 
-	this->currentNode = new Node<T>(data, nullptr, nullptr, this->previousNode);
+	Inspector::currentNode = new Node<T>(data, nullptr, nullptr, Inspector::previousNode);
 
 	//Attach to parent
-	if (this->previousNode != nullptr)
+	if (Inspector::previousNode != nullptr)
 	{
-		if (this->lastMove == this->LEFT)
-			this->previousNode->left = this->currentNode;
-		else if (this->lastMove == this->RIGHT)
-			this->previousNode->right = this->currentNode;
+		if (Inspector::lastMove == Inspector::LEFT)
+			Inspector::previousNode->left = Inspector::currentNode;
+		else if (Inspector::lastMove == Inspector::RIGHT)
+			Inspector::previousNode->right = Inspector::currentNode;
 	}
 
 	if (*treeRootPointer == nullptr)
-		*treeRootPointer = this->currentNode;
+		*treeRootPointer = Inspector::currentNode;
 
 }
 
 template <class T>
 typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(const T& data)
 {
-	if (this->isEmpty())
+	if (Inspector::isEmpty())
 	{
 		addNewDataNode(data);
 	}
 	else
 	{
-		this->currentNode->data = data;
+		Inspector::currentNode->data = data;
 	}
 	return *this;
 }
@@ -269,9 +323,9 @@ typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::changeData(cons
 template <class T>
 BinaryTree<T> BinaryTree<T>::Transformer::abandonLeftSubtree()
 {
-	this->ensureNotEmpty();
+	Inspector::ensureNotEmpty();
 	BinaryTree<T> leftSubTree;
-	leftSubTree.root = this->currentNode->left;
+	leftSubTree.root = Inspector::currentNode->left;
 	detachFromParent(leftSubTree.root);
 	return leftSubTree;
 }
@@ -279,9 +333,9 @@ BinaryTree<T> BinaryTree<T>::Transformer::abandonLeftSubtree()
 template <class T>
 BinaryTree<T> BinaryTree<T>::Transformer::abandonRightSubtree()
 {
-	this->ensureNotEmpty();
+	Inspector::ensureNotEmpty();
 	BinaryTree<T> rightSubTree;
-	rightSubTree.root = this->currentNode->right;
+	rightSubTree.root = Inspector::currentNode->right;
 	detachFromParent(rightSubTree.root);
 	return rightSubTree;
 }
@@ -289,20 +343,20 @@ BinaryTree<T> BinaryTree<T>::Transformer::abandonRightSubtree()
 template <class T>
 void BinaryTree<T>::Transformer::adoptAsLeftSubtree(BinaryTree<T>& newLeftSubtree)
 {
-	this->ensureNotEmpty();
-	if (this->hasLeft())
-		recursiveDeleteStructure(this->currentNode->left);
-	attachLeftChild(this->currentNode, newLeftSubtree.root);
+	Inspector::ensureNotEmpty();
+	if (Inspector::hasLeft())
+		recursiveDeleteStructure(Inspector::currentNode->left);
+	attachLeftChild(Inspector::currentNode, newLeftSubtree.root);
 	newLeftSubtree.root = nullptr;
 }
 
 template <class T>
 void BinaryTree<T>::Transformer::adoptAsRightSubtree(BinaryTree<T>& newRightSubtree)
 {
-	this->ensureNotEmpty();
-	if (this->hasRight())
-		recursiveDeleteStructure(this->currentNode->right);
-	attachRightChild(this->currentNode, newRightSubtree.root);
+	Inspector::ensureNotEmpty();
+	if (Inspector::hasRight())
+		recursiveDeleteStructure(Inspector::currentNode->right);
+	attachRightChild(Inspector::currentNode, newRightSubtree.root);
 	newRightSubtree.root = nullptr;
 }
 
