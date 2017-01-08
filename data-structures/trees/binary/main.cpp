@@ -7,21 +7,18 @@ using namespace std;
 template <class T>
 void dotPrint(ostream& out, typename BinaryTree<T>::Inspector treeInspector, size_t id)
 {
+	if (treeInspector.isEmpty())
+	{
+		out << id << "[label=\"NULL\" shape=point];" << endl;
+		return;
+	}
 	out << id << "[label=\"" << treeInspector.getData() << "\"];" << endl;
-	if (treeInspector.hasLeft())
-	{
-		out << id << " -> " << id + 1 << ";" << endl;
-		treeInspector.goLeft();
-		dotPrint<T>(out, treeInspector, id + 1);
-		treeInspector.goToParent();
-	}
-	if (treeInspector.hasRight())
-	{
-		out << id << " -> " << id + 2 << ";" << endl;
-		treeInspector.goRight();
-		dotPrint<T>(out, treeInspector, id + 2);
-		treeInspector.goToParent();
-	}
+
+	out << id << " -> " << 2*id + 1 << ";" << endl;
+	dotPrint<T>(out, treeInspector.left(), 2*id + 1);
+
+	out << id << " -> " << 2*id + 2 << ";" << endl;
+	dotPrint<T>(out, treeInspector.right(), 2*id + 2);
 }
 
 template <class T>
