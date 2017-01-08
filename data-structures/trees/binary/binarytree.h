@@ -187,6 +187,7 @@ typename BinaryTree<T>::Inspector BinaryTree<T>::Inspector::left() const
 	ensureNotEmpty();
 	Inspector inspector(currentNode->left);
 	inspector.previousNode = currentNode;
+	inspector.lastMove = LEFT;
 	return inspector;
 }
 
@@ -196,15 +197,17 @@ typename BinaryTree<T>::Inspector BinaryTree<T>::Inspector::right() const
 	ensureNotEmpty();
 	Inspector inspector(currentNode->right);
 	inspector.previousNode = currentNode;
+	inspector.lastMove = RIGHT;
 	return inspector;
 }
 
 template <class T>
 typename BinaryTree<T>::Inspector BinaryTree<T>::Inspector::parent() const
 {
-	if (isEmpty())
-		return Inspector(previousNode);
-	return Inspector(currentNode->parent);
+	Node<T> *parent = isEmpty() ? previousNode : currentNode->parent;
+	Inspector inspector(parent);
+	inspector.lastMove = UP;
+	return inspector;
 }
 
 template <class T>
