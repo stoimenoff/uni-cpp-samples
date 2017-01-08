@@ -47,8 +47,8 @@ void recursiveDeleteStructure (Node<T> *root)
 {
 	if (root != nullptr)
 	{
-		delete root->left;
-		delete root->right;
+		recursiveDeleteStructure(root->left);
+		recursiveDeleteStructure(root->right);
 		delete root;
 	}
 }
