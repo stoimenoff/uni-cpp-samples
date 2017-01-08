@@ -54,7 +54,7 @@ void recursiveDeleteStructure (Node<T> *root)
 }
 
 template <class T>
-Node<T>* copyStructure(const Node<T> *root)
+Node<T>* copyStructure(Node<T> *root)
 {
 	if (root == nullptr)
 		return root;
