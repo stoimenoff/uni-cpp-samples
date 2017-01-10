@@ -109,13 +109,13 @@ list<T> Graph<T>::getVertexes() const
 }
 
 template <class T>
-bool containsVertex(const T& vertexData) const
+bool Graph<T>::containsVertex(const T& vertexData) const
 {
 	return ids.find(vertexData) != ids.end();
 }
 
 template <class T>
-bool containsEdge(const T& firstVertexData, const T& secondVertexData) const
+bool Graph<T>::containsEdge(const T& firstVertexData, const T& secondVertexData) const
 {
 		size_t firstID = ids.at(firstVertexData);
 		size_t secondID = ids.at(secondVertexData);
