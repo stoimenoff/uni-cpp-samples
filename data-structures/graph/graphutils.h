@@ -7,10 +7,12 @@
 #include <queue>
 #include <set>
 #include <map>
+#include <vector>
 
 using std::queue;
 using std::set;
 using std::map;
+using std::vector;
 
 template <class ResultType, class VertexType>
 class GraphBFSReducer
@@ -27,8 +29,8 @@ ResultType BFS(const Graph<T>& graph, const T& startingVertex,
 {
 	queue<Bucket<T>> vertexes;
 	set<T> visited;
-	vertexes.push(Bucket<T>(startingVertex));
 	vertexes.push(Bucket<T>());
+	vertexes.push(Bucket<T>(startingVertex));
 	visited.insert(startingVertex);
 
 	while (vertexes.size() > 1)
@@ -90,8 +92,36 @@ public:
 template <class T>
 Graph<T> BFSInducedGraph(const Graph<T>& graph, const T& startingVertex)
 {
-	BFSGraphReducer<T> asdf(graph);
-	return BFS<Graph<T>, T>(graph, startingVertex, asdf);
+	BFSGraphReducer<T> BFSGraphInducer(graph);
+	return BFS<Graph<T>, T>(graph, startingVertex, BFSGraphInducer);
+}
+
+template <class T>
+class BFSGraphLayerReducer : public GraphBFSReducer<vector<set<T>>, T>
+{
+private:
+	Graph<T> originalGraph;
+	vector<set<T>> layers;
+public:
+	virtual void nextVertex(const T& vertex)
+	{
+		layers.back().insert(vertex);
+	}
+	virtual void nextLayer()
+	{
+		layers.push_back(set<T>());
+	}
+	virtual vector<set<T>> getResult()
+	{
+		return layers;
+	}
+};
+
+template <class T>
+vector<set<T>> BFSInducedLayers(const Graph<T>& graph, const T& startingVertex)
+{
+	BFSGraphLayerReducer<T> layerReducer;
+	return BFS<vector<set<T>>, T>(graph, startingVertex, layerReducer);
 }
 
 template <class T>

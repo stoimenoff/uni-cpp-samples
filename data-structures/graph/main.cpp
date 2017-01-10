@@ -31,5 +31,12 @@ int main()
 	for (const auto& entry : allBFSInducedGraphs(names))
 		entry.second.dottyPrint(std::cerr);
 
+	for (const set<string>& layer : BFSInducedLayers(names, string("pesho")))
+	{
+		std::cout << "---------------------" << std::endl;
+		for (const string& vertex : layer)
+			std::cout << vertex << std::endl;
+	}
+
 	return 0;
 }
