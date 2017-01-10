@@ -41,6 +41,7 @@ Bucket<T>::Bucket() : data(nullptr) {}
 template <class T>
 Bucket<T>::Bucket(const Bucket<T>& other)
 {
+	data = nullptr;
 	if (other.hasData())
 		setData(other.getData());
 	else
