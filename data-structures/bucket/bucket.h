@@ -10,6 +10,7 @@ class Bucket
 		T* data;
 	public:
 		Bucket();
+		Bucket(const T&);
 		Bucket(const Bucket<T>& other);
 		Bucket<T>& operator=(const Bucket<T>& other);
 		~Bucket();
@@ -25,6 +26,13 @@ void Bucket<T>::setData(const T& newData)
 	if (data != nullptr)
 		delete data;
 	data = new T(newData);
+}
+
+template <class T>
+Bucket<T>::Bucket(const T& newData)
+{
+	data = nullptr;
+	setData(newData);
 }
 
 template <class T>
