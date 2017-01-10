@@ -100,7 +100,6 @@ template <class T>
 class BFSGraphLayerReducer : public GraphBFSReducer<vector<set<T>>, T>
 {
 private:
-	Graph<T> originalGraph;
 	vector<set<T>> layers;
 public:
 	virtual void nextVertex(const T& vertex)
