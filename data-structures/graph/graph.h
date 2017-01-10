@@ -8,6 +8,7 @@
 #include <list>
 #include <vector>
 #include <ostream>
+#include <stdexcept>
 
 using std::map;
 using std::unordered_set;
@@ -15,6 +16,7 @@ using std::list;
 using std::vector;
 using std::ostream;
 using std::endl;
+using std::runtime_error;
 
 template <class T>
 class Graph
@@ -46,6 +48,8 @@ class Graph
 template <class T>
 void Graph<T>::addVertex(const T& vertexData)
 {
+	if (containsVertex(vertexData))
+		throw runtime_error("Trying to add already existing vertex!");
 	size_t id = idGenerator.getID();
 	ids[vertexData] = id;
 	vertexes[id] = Vertex(vertexData);
@@ -54,6 +58,8 @@ void Graph<T>::addVertex(const T& vertexData)
 template <class T>
 void Graph<T>::deleteVertex(const T& vertexData)
 {
+	if (!containsVertex(vertexData))
+		throw runtime_error("Trying to delete non-existing vertex!");
 	size_t id = ids.erase(vertexData);
 	vertexes.erase(id);
 	idGenerator.free(id);
@@ -66,6 +72,8 @@ void Graph<T>::deleteVertex(const T& vertexData)
 template <class T>
 void Graph<T>::addEdge(const T& firstVertexData, const T& secondVertexData)
 {
+	if (!containsVertex(firstVertexData) || !containsVertex(secondVertexData))
+		throw runtime_error("Trying to add an edge with a non-existing vertex!");
 	size_t firstID = ids.at(firstVertexData);
 	size_t secondID = ids.at(secondVertexData);
 	vertexes.at(firstID).adjacentIDs.insert(secondID);
@@ -74,6 +82,8 @@ void Graph<T>::addEdge(const T& firstVertexData, const T& secondVertexData)
 template <class T>
 void Graph<T>::deleteEdge(const T& firstVertexData, const T& secondVertexData)
 {
+	if (!containsVertex(firstVertexData) || !containsVertex(secondVertexData))
+		throw runtime_error("Trying to delete an edge with a non-existing vertex!");
 	size_t firstID = ids.at(firstVertexData);
 	size_t secondID = ids.at(secondVertexData);
 	vertexes.at(firstID).adjacentIDs.erase(secondID);
