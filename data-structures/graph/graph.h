@@ -38,6 +38,8 @@ class Graph
 		void dottyPrint(ostream& out) const;
 		list<T> getAdjacent(const T& vertexData) const;
 		list<T> getVertexes() const;
+		bool containsVertex(const T& vertexData) const;
+		bool containsEdge(const T& firstVertexData, const T& secondVertexData) const;
 };
 
 template <class T>
@@ -104,6 +106,20 @@ list<T> Graph<T>::getVertexes() const
 	for (const auto& entry : vertexes)
 		vertexesData.push_back(entry.second.data);
 	return vertexesData;
+}
+
+template <class T>
+bool containsVertex(const T& vertexData) const
+{
+	return ids.find(vertexData) != ids.end();
+}
+
+template <class T>
+bool containsEdge(const T& firstVertexData, const T& secondVertexData) const
+{
+		size_t firstID = ids.at(firstVertexData);
+		size_t secondID = ids.at(secondVertexData);
+		return vertexes.at(firstID).adjacentIDs.count(secondID) > 0;
 }
 
 #endif
