@@ -25,9 +25,6 @@ int main()
 	names.addVertex("kiro");
 	names.addEdge("kiro", "penka");
 
-	// for (const string& vertex : names.getVertexes())
-	// 	std::cout << vertex << std::endl;
-
 	string ver = "pesho";
 	names.dottyPrint(std::cerr);
 	// BFSInducedGraph(names, ver).dottyPrint(std::cerr);
@@ -47,7 +44,6 @@ int main()
 	{
 		bigOne.addEdge(i, 99-i);
 	}
-
 	bigOne.dottyPrint(std::cerr);
 
 	return 0;

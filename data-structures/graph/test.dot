@@ -1,6 +1,5 @@
-digraph G0
-{
-1[label="gosho"];
+digraph G
+{1[label="gosho"];
 4[label="kiro"];
 2[label="penka"];
 0[label="pesho"];
@@ -11,13 +10,11 @@ digraph G0
 3 -> 1;
 4 -> 2;
 }
-digraph G3
-{
-0[label="gosho"];
+digraph G
+{0[label="gosho"];
 }
-digraph G9
-{
-3[label="gosho"];
+digraph G
+{3[label="gosho"];
 0[label="kiro"];
 1[label="penka"];
 2[label="pesho"];
@@ -25,31 +22,27 @@ digraph G9
 1 -> 2;
 2 -> 3;
 }
-digraph G5
-{
-2[label="gosho"];
+digraph G
+{2[label="gosho"];
 0[label="penka"];
 1[label="pesho"];
 0 -> 1;
 1 -> 2;
 }
-digraph G1
-{
-2[label="gosho"];
+digraph G
+{2[label="gosho"];
 1[label="penka"];
 0[label="pesho"];
 0 -> 2;
 0 -> 1;
 }
-digraph G7
-{
-1[label="gosho"];
+digraph G
+{1[label="gosho"];
 0[label="stamat"];
 0 -> 1;
 }
-digraph G0
-{
-0[label="0"];
+digraph G
+{0[label="0"];
 1[label="1"];
 2[label="2"];
 3[label="3"];
