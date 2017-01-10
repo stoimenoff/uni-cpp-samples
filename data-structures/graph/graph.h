@@ -20,6 +20,7 @@ template <class T>
 class Graph
 {
 	private:
+		static IDGenerator graphIDGenerator;
 		struct Vertex
 		{
 			T data;
@@ -28,9 +29,11 @@ class Graph
 			Vertex(const T& data) : data(data) {}
 		};
 		IDGenerator idGenerator;
+		size_t graphId;
 		map<T, size_t> ids;
 		map<size_t, Vertex> vertexes;
 	public:
+		Graph();
 		void addVertex(const T& vertexData);
 		void addEdge(const T& firstVertexData, const T& secondVertexData);
 		void deleteVertex(const T& vertexData);
@@ -41,6 +44,15 @@ class Graph
 		bool containsVertex(const T& vertexData) const;
 		bool containsEdge(const T& firstVertexData, const T& secondVertexData) const;
 };
+
+template <class T>
+IDGenerator Graph<T>::graphIDGenerator;
+
+template <class T>
+Graph<T>::Graph()
+{
+	graphId = graphIDGenerator.getID();
+}
 
 template <class T>
 void Graph<T>::addVertex(const T& vertexData)
@@ -81,7 +93,7 @@ void Graph<T>::deleteEdge(const T& firstVertexData, const T& secondVertexData)
 template <class T>
 void Graph<T>::dottyPrint(ostream& out) const
 {
-	out << "digraph G\n{" << endl;
+	out << "digraph G" << graphId << "\n{" << endl;
 	for (const auto& entry : ids)
 		out << entry.second << "[label=\"" << entry.first << "\"];" << endl;
 	for (const auto& entry : vertexes)
