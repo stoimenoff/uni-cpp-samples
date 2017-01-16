@@ -8,11 +8,13 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <list>
 
 using std::queue;
 using std::set;
 using std::map;
 using std::vector;
+using std::list;
 
 template <class ResultType, class VertexType>
 class GraphBFSReducer
@@ -132,6 +134,38 @@ map<T, Graph<T>> allBFSInducedGraphs(const Graph<T>& graph)
 		graphs[vertex] = BFSInducedGraph<T>(graph, vertex);
 	}
 	return graphs;
+}
+
+template <class T>
+list<list<T>> allLimitedPaths(const Graph<T>& graph, const T& startingVertex,
+							const T& endVertex, unsigned int limit)
+{
+	list<list<T>> resultPaths;
+	list<list<T>> paths;
+	list<T> currentPath;
+	currentPath.push_back(startingVertex);
+	paths.push_back(currentPath);
+
+	unsigned int currentSize = 0;
+	for (unsigned int i = 0; i <= limit; ++i)
+	{
+		currentSize = paths.size();
+		for (unsigned int j = 0; j < currentSize; ++j)
+		{
+			currentPath = paths.front();
+			paths.pop_front();
+			if (currentPath.back() == endVertex)
+				resultPaths.push_back(currentPath);
+			for (const T& adjacent : graph.getAdjacent(currentPath.back()))
+			{
+				currentPath.push_back(adjacent);
+				paths.push_back(currentPath);
+				currentPath.pop_back();
+			}
+		}
+	}
+
+	return resultPaths;
 }
 
 #endif
