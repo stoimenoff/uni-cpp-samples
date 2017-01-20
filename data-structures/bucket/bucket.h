@@ -15,6 +15,7 @@ class Bucket
 		Bucket<T>& operator=(const Bucket<T>& other);
 		~Bucket();
 		bool hasData() const;
+		bool isEmpty() const;
 		const T& getData() const;
 		void setData(const T&);
 		void deleteData();
@@ -70,6 +71,12 @@ template <class T>
 bool Bucket<T>::hasData() const
 {
 	return data != nullptr;
+}
+
+template <class T>
+bool Bucket<T>::isEmpty() const
+{
+	return !hasData();
 }
 
 template <class T>

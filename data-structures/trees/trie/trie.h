@@ -65,7 +65,7 @@ bool Trie<T>::isLeaf() const
 template <class T>
 bool Trie<T>::isRedundant() const
 {
-	return isLeaf() && !bucket.hasData();
+	return isLeaf() && bucket.isEmpty();
 }
 
 template <class T>
