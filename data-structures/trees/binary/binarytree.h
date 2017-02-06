@@ -74,9 +74,9 @@ class BinaryTree
 
 		BinaryTree();
 		BinaryTree(const BinaryTree<T>&);
-		BinaryTree(const BinaryTree<T>&&);
+		BinaryTree(BinaryTree<T>&&);
 		BinaryTree<T>& operator = (const BinaryTree<T>&);
-		BinaryTree<T>& operator = (const BinaryTree<T>&&);
+		BinaryTree<T>& operator = (BinaryTree<T>&&);
 		~BinaryTree();
 		Inspector getInspector() const;
 		Transformer getTransformer();
@@ -93,7 +93,7 @@ BinaryTree<T>::BinaryTree(const BinaryTree<T>& other)
 }
 
 template <class T>
-BinaryTree<T>::BinaryTree(const BinaryTree<T>&& other)
+BinaryTree<T>::BinaryTree(BinaryTree<T>&& other)
 {
 	root = other.root;
 	other.root = nullptr;
@@ -108,7 +108,7 @@ BinaryTree<T>& BinaryTree<T>::operator = (const BinaryTree<T>& other)
 }
 
 template <class T>
-BinaryTree<T>& BinaryTree<T>::operator = (const BinaryTree<T>&& other)
+BinaryTree<T>& BinaryTree<T>::operator = (BinaryTree<T>&& other)
 {
 	if (this != &other)
 	{
