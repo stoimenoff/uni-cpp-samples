@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "bst.h"
+#include "bad_patched_bst.h"
 
 using std::cout;
 using std::endl;
@@ -16,7 +16,6 @@ void reverseOrder(Node<int>*& root)
 	}
 }
 
-// friend фукнция на BinarySearchTree
 void reverseOrder(BinarySearchTree<int>& tree)
 {
 	reverseOrder(tree.root);

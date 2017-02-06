@@ -2,7 +2,7 @@
 #include <limits>
 #include <algorithm>
 
-#include "bst.h"
+#include "../../../trees/binary/search_tree/bst.h"
 #include "interval.h"
 
 using std::cout;

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stack>
 
-#include "tree.h"
+#include "../../../trees/binary/exercises/tree.h"
 
 using std::cout;
 using std::endl;
