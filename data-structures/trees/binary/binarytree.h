@@ -324,6 +324,7 @@ typename BinaryTree<T>::Transformer& BinaryTree<T>::Transformer::addData(const T
 	if (*treeRootPointer == nullptr)
 		*treeRootPointer = Inspector::currentNode;
 
+	return *this;
 }
 
 template <class T>
