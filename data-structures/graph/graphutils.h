@@ -15,6 +15,48 @@ using std::set;
 using std::map;
 using std::vector;
 using std::list;
+using std::pair;
+
+template <class T>
+void addAdjacencyListToGraph(Graph<T>& graph, const list<T>& adjacencyList)
+{
+	auto it = adjacencyList.cbegin();
+	T startingVertex = *it;
+	if (!graph.containsVertex(startingVertex))
+		graph.addVertex(startingVertex);
+
+	for (++it; it != adjacencyList.cend(); ++it)
+	{
+		T adjacentVertex = *it;
+		if (!graph.containsVertex(adjacentVertex))
+			graph.addVertex(adjacentVertex);
+		graph.addEdge(startingVertex, adjacentVertex);
+	}
+}
+
+template <class T>
+Graph<T> graphFromAdjacencyLists(const list<list<T>>& adjacencyLists)
+{
+	Graph<T> graph;
+	for (const list<T>& adjacencyList : adjacencyLists)
+		addAdjacencyListToGraph(graph, adjacencyList);
+	return graph;
+}
+
+template <class T>
+Graph<T> graphFromEdges(const list<pair<T, T>>& edges)
+{
+	Graph<T> graph;
+	for (const pair<T, T>& edge : edges)
+	{
+		if (!graph.containsVertex(edge.first))
+			graph.addVertex(edge.first);
+		if (!graph.containsVertex(edge.second))
+			graph.addVertex(edge.second);
+		graph.addEdge(edge.first, edge.second);
+	}
+	return graph;
+}
 
 template <class ResultType, class VertexType>
 class GraphBFSReducer
