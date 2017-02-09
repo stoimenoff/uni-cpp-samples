@@ -205,6 +205,7 @@ T BinarySearchTree<T>::Iterator::operator*()
 template <class T>
 typename BinarySearchTree<T>::Iterator& BinarySearchTree<T>::Iterator::operator++()
 {
+	**this;
 	nodes.pop();
 }
 
