@@ -17,8 +17,7 @@ Rational::Rational (int numerator, int denominator)
 {
 	denominator = (denominator == 0) ? 1 : denominator;
 
-	int sign = (numerator*denominator) / std::abs(numerator*denominator);
-	sign = (numerator == 0) ? 1 : sign;
+	int sign = (numerator == 0) ? 1 : (numerator*denominator) / std::abs(numerator*denominator);
 
 	this->numerator = sign * std::abs(numerator);
 	this->denominator = std::abs(denominator);
